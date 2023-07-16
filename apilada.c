@@ -4,7 +4,7 @@
 #include <pigpio.h>
 #define tiempo    100000
 
-
+/*
 int ciclos = 7;
 int leds[8];
 int aux[8];
@@ -15,8 +15,20 @@ int resultante[8]={0};
 int valor = 128;
 int ch=0;
 
+*/
+
 void apilada(void){
     int i,k;
+    int ciclos = 7;
+    int leds[8];
+    int aux[8];
+    int mascara_on = 1;
+    int mascara_off = 0;
+    int resultante[8]={0};
+
+    int valor = 128;
+    int ch=0;
+
 
     itob(valor,leds);                    // convierto valor a binario y lo almaceno en un arreglo
     
