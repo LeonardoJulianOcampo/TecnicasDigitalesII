@@ -1,4 +1,4 @@
-# TecnicasDigitalesII
+# Tecnicas Digitales II
 
 Este proyecto consiste en integrar dichos ejercicios de la siguiente manera:
 
