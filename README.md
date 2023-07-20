@@ -13,3 +13,4 @@ Este proyecto consiste en integrar dichos ejercicios de la siguiente manera:
     * En modo remoto la selección desde el menú de la secuencia de luces a ejecutarse y control de velocidad se harán desde una PC que se encontrará conectada mediante un cable serie RS-232 a la Raspberry.
     * Como opción genere una sección destinada a establecer las velocidades iniciales de las secuencias realizando el ajuste de los potenciómetros.
     * Escriba una función externa en código ensamblador de ARM la cual será llamada desde el programa principal. Esta función deberá realizar algún proceso simple dentro del programa (switch case, loop, etc). El estudiante decidirá el proceso a resolver por la función y el lugar donde se usará. 
+
