@@ -42,6 +42,7 @@ void menu(void) {
     keypad(stdscr, TRUE);
     noecho();
     nodelay(stdscr, FALSE); // Importante para que getch() espere a que se presione una tecla
+    curs_set(0);
 
     while (!exit) {
         clear();
@@ -69,9 +70,12 @@ void menu(void) {
                 break;
             case 10: // Enter key
                 if (counter(-1) == OPTIONS - 1)
-                    exit = 1;
-                else
-                    mvprintw(row, 0, "Opción seleccionada: %s", options[counter(-1)]);
+                    	exit = 1;
+                else if (counter(-1)==0)
+			menu_efectos();
+		else
+			menu_ajustes();
+                    mvprintw(2, 2, "Opción seleccionada: %s", options[counter(-1)]);
                 refresh();
                 //getch(); // Esperar a que el usuario presione una tecla para continuar
                 break;
