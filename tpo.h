@@ -1,3 +1,6 @@
+/*funcion de conteo de items en menues*/
+
+int counter(int updown);
 
 /*funcion que muestra el menu principal*/
 int menu(void);

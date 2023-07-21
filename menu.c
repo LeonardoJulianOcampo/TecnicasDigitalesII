@@ -9,31 +9,14 @@
 
 #define OPTIONS 3
 
-int counter(int select) {
-    static int count = 0;
-
-    if (select == 1 && count < OPTIONS - 1)
-        count++;
-    else if (select == 1 && count == OPTIONS - 1)
-        count = 0;
-    else if (select == 0 && count > 0)
-        count--;
-    else if (select == 0 && count == 0)
-        count = OPTIONS - 1;
-    else
-        count = count;
-
-    return count;
-}
-
 void menu(void) {
     int op, row, col;
     int exit = 0;
     char mesg[] = "   MENU PRINCIPAL   ";
     char options[OPTIONS][30] = {
         "Selección de Efectos",
-        "      Ajustes       ",
-	"       Salir        ",
+        "Ajustes       ",
+	"Salir        ",
     };
 
     initscr();
@@ -49,7 +32,7 @@ void menu(void) {
         mvprintw(row / 2, (col - strlen(mesg)) / 2, mesg);
 
         for (int i = 0; i < OPTIONS; i++) {
-            if (i == counter(-1)) {
+            if (i == counter(-1,0,OPTIONS)) {
                 attron(A_STANDOUT); // Resaltar opción seleccionada
                 mvprintw(row / 2 + i + 1, (col - strlen(options[i])) / 2, "-> %s", options[i]);
                 attroff(A_STANDOUT);
@@ -63,15 +46,15 @@ void menu(void) {
 
         switch (op) {
             case KEY_UP:
-                counter(0);
+                counter(0,0,OPTIONS);
                 break;
             case KEY_DOWN:
-                counter(1);
+                counter(1,0,OPTIONS);
                 break;
             case 10: // Enter key
                 if (counter(-1) == OPTIONS - 1)
                     	exit = 1;
-                else if (counter(-1)==0)
+                else if (counter(-1,0,OPTIONS)==0)
 			menu_efectos();
 		else
 			menu_ajustes();
