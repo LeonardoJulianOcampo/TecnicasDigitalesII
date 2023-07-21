@@ -11,6 +11,7 @@
 
 void menu(void) {
     int op, row, col;
+    int i;
     int exit = 0;
     char mesg[] = "   MENU PRINCIPAL   ";
     char options[OPTIONS][30] = {
@@ -30,8 +31,10 @@ void menu(void) {
     while (!exit) {
         clear();
         mvprintw(row / 2, (col - strlen(mesg)) / 2, mesg);
+	refresh();
 
-        for (int i = 0; i < OPTIONS; i++) {
+		
+        for (i = 0; i < OPTIONS; i++) {
             if (i == counter(-1,0,OPTIONS)) {
                 attron(A_STANDOUT); // Resaltar opción seleccionada
                 mvprintw(row / 2 + i + 1, (col - strlen(options[i])) / 2, "-> %s", options[i]);
@@ -41,8 +44,7 @@ void menu(void) {
             }
         }
 
-        refresh();
-        op = getch();
+	op=getch();
 
         switch (op) {
             case KEY_UP:
@@ -54,15 +56,13 @@ void menu(void) {
             case 10: // Enter key
                 if (counter(-1,0,OPTIONS) == OPTIONS - 1)
                     	exit = 1;
-                else if (counter(-1,0,OPTIONS)==0)
+                else if (counter(-1,0,OPTIONS)==0){
 			menu_efectos();
-			
+			i = counter(-1,1,OPTIONS);
+		}
 		else
-			menu_ajustes();
-                
-		mvprintw(2, 2, "Opción seleccionada: %s", options[counter(-1,0,OPTIONS)]);
+			menu_ajustes(); 
                 refresh();
-                getch(); // Esperar a que el usuario presione una tecla para continuar
                 break;
             default:
                 break;

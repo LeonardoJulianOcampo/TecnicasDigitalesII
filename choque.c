@@ -1,3 +1,4 @@
+#include "tpo.h"
 #include <stdio.h>
 #include <ncurses.h>
 #include <stdlib.h>
@@ -28,13 +29,7 @@ void choque(void){
 
 
     gpioInitialise();
-
-    initscr();                           //inicializo subrutinas de ncurses
-    raw();
-    noecho();
-    keypad(stdscr,TRUE);
-    timeout(1);                          //para que no espere a que se presione F2
-
+    nodelay(stdscr,TRUE);
 
 
     while(ch != KEY_F(2)){    
@@ -44,11 +39,7 @@ void choque(void){
         ida    = 128;
         vuelta =   1;
 	resultado = 0;
-        
-
-	
-
-	
+        	
         for(i=0;i<=7;i++){
 		resultado = ida + vuelta;
 		itob(resultado,leds);
@@ -65,5 +56,5 @@ void choque(void){
 	interfaz(leds);
 	gpioTerminate();
 	refresh();
-	endwin();
+	nodelay(stdscr,FALSE);
 }

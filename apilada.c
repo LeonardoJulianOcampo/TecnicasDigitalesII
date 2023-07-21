@@ -1,3 +1,4 @@
+#include "tpo.h"
 #include <stdio.h>
 #include <ncurses.h>
 #include <stdlib.h>
@@ -34,12 +35,18 @@ void apilada(void){
     
     gpioInitialise();
 
-    initscr();                           //inicializo subrutinas de ncurses
     raw();
     noecho();
     keypad(stdscr,TRUE);
-    timeout(1);                          //para que no espere a que se presione F2
-    
+    nodelay(stdscr,TRUE);   	
+    clear();
+
+	
+    for(int i=0; i<=7;i++){
+	    leds[i]=0;
+    }
+
+	interfaz(leds);
 
     while(ch != KEY_F(2)){      
         
@@ -51,10 +58,10 @@ void apilada(void){
             for (k = 0; k <= 7; k++){
                 aux[k]=0;
             }
-        interfaz(leds,8);
+        interfaz(leds);
         gpioDelay(tiempo);
         leds[ciclos]=0;
-        interfaz(leds,8);
+        interfaz(leds);
         gpioDelay(tiempo);
         ciclos = 7;   
         }
@@ -65,7 +72,7 @@ void apilada(void){
         
             for(k=0;k<=7;k++)
                 leds[k]=leds[k] || aux[k];
-            interfaz(leds,8);
+            interfaz(leds);
             gpioDelay(tiempo);
             
             for(i=0;i<=ciclos;i++){
@@ -75,16 +82,16 @@ void apilada(void){
                 for(k=0;k<=7;k++)
                     leds[k]=leds[k] || aux[k];  // OR bit a bit entre los elementos de leds y aux
                 
-                interfaz(leds,8);
+                interfaz(leds);
                 gpioDelay(tiempo);
             }
             
             leds[ciclos]=0;
-            interfaz(leds,8);
+            interfaz(leds);
             gpioDelay(tiempo);
             
             leds[ciclos]=1;
-            interfaz(leds,8);
+            interfaz(leds);
             gpioDelay(tiempo);
             ciclos --;                          // decremento en una unidad la variable ciclos
             
@@ -100,11 +107,10 @@ void apilada(void){
       leds[i]=0;
   	
       
-    printf("\nF2 presionado.Sale.\n "); 
-    interfaz(leds,8);
+    interfaz(leds);
     gpioTerminate();
+    nodelay(stdscr,FALSE);
     refresh      ();
-    endwin       ();
 
 }
 
