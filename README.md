@@ -1,4 +1,4 @@
-# Tecnicas Digitales II
+# Tecnicas Digitales II - TPO
 
 Este proyecto consiste en integrar dichos ejercicios de la siguiente manera:
 
