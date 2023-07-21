@@ -34,8 +34,8 @@ void apilada(){
     int mascara_on = 1;
     int mascara_off = 0;
     int resultante[8]={0};
-    uint32_t time_factor = 10000;
     int valor = 128;
+    uint32_t time_factor = 10000;
     int ch=0;
     int exit = 0;
     int pigpioInitialized = 0;
