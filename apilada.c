@@ -38,8 +38,14 @@ void apilada(void){
     raw();
     noecho();
     keypad(stdscr,TRUE);
-    timeout(1);                          //para que no espere a que se presione F2
+    nodelay(stdscr,TRUE);                          //para que no espere a que se presione F2
     
+
+    for (i = 0; i < 8; i++) {
+    	leds[i] = 0;
+    	aux[i] = 0;
+	}
+
 
     while(ch != KEY_F(2)){      
         
@@ -99,12 +105,9 @@ void apilada(void){
     for(i=0;i<8;i++)                        // Una vez que se rompe el ciclo se apagan los leds 
       leds[i]=0;
   	
-      
-    printf("\nF2 presionado.Sale.\n "); 
     interfaz(leds,8);
+    nodelay(stdscr,FALSE);
     gpioTerminate();
-    refresh      ();
-    endwin       ();
 
 }
 
