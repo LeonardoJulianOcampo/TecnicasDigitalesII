@@ -12,8 +12,8 @@
 bool keep_reading = true;
 // Variable global para almacenar la última tecla presionada
 int last_key = ERR;
-
-
+uint32_t time_factor = 10000;
+int s = 0;
 
 // Función para leer el teclado en un hilo separado
 void *read_keyboard(void *arg) {
@@ -21,7 +21,17 @@ void *read_keyboard(void *arg) {
         int ch = getch();
         if (ch != ERR) {
             last_key = ch;
-        }
+	if (last_key != ERR) {
+	    ch = last_key;
+	    last_key = ERR;
+
+	    if      (ch == KEY_F(2)) s = 1;
+	    else if (ch == KEY_UP)   time_factor = vel(1);
+	    else if (ch == KEY_DOWN) time_factor = vel(0);
+	    else                     time_factor = time_factor;
+	}
+
+	}
     }
     return NULL;
 }
@@ -35,9 +45,9 @@ void apilada(){
     int mascara_off = 0;
     int resultante[8]={0};
     int valor = 128;
-    uint32_t time_factor = 10000;
+//    uint32_t time_factor = 10000;
     int ch=0;
-    int exit = 0;
+//    int exit = 0;
     int pigpioInitialized = 0;
 
 
@@ -49,7 +59,6 @@ void apilada(){
             pigpioInitialized = 0;
 
     nodelay(stdscr,TRUE);                          //para que no espere a que se presione F2
-    
     clear();
 
     // Crear un nuevo hilo para leer el teclado
@@ -63,17 +72,9 @@ void apilada(){
 
         interfaz(leds);
     
-        while(!exit && pigpioInitialized){      
+        while(!s && pigpioInitialized){      
                 // Procesar la última tecla presionada
-                if (last_key != ERR) {
-                    ch = last_key;
-                    last_key = ERR;
 
-                    if      (ch == KEY_F(2)) exit = 1;
-                    else if (ch == KEY_UP)   time_factor = vel(1);
-                    else if (ch == KEY_DOWN) time_factor = vel(0);
-                    else                     time_factor = time_factor;
-                }
 	printw("%d",time_factor);
         if(ciclos == 0){
             leds[ciclos]=1;
