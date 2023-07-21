@@ -8,6 +8,8 @@
 #define LED6 16
 #define LED7 20
 #define LED8 21
+#include<pigpio.h>
+
 
 void interfaz(int *leds){
 	gpioWrite(LED1,leds[0]);
