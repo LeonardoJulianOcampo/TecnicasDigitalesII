@@ -47,7 +47,7 @@ void menu_efectos(void){
 			
 			switch(counter(-1,0,OPTIONS)){
 			
-				case 0: lacorrida();
+				case 0: lacorrida(0);
 					break;
 				case 1: choque();
 					break;

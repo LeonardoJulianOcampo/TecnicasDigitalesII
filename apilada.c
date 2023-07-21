@@ -18,7 +18,7 @@ int ch=0;
 
 */
 
-void apilada(void){
+void apilada(int initial_time_value){
     int i,k;
     int ciclos = 7;
     int leds[8];

@@ -25,6 +25,6 @@ void interfaz(int *leds);
 void autofan(void);
 
 void choque(void);
-void lacorrida(void);
+void lacorrida(int initial_time_value);
 void apilada(void);
 
