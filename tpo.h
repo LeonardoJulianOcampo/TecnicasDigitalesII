@@ -18,7 +18,7 @@ int contrasenia(void);
 int efectos(int);
 
 /*funcion que detecta si flecha-arriba o flecha-abajo se presionaron para subir o bajar la velocidad*/
-
+void *read_keyboard(void *arg)
 
 /*funcion que convierte un entero a binario y luego almacena cada digito en un elemento de un array de 8 elementos*/
 void itob(int numero, int *matrix);
