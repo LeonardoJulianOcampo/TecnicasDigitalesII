@@ -47,13 +47,25 @@ void menu_efectos(void){
 			
 			switch(counter(-1,0,OPTIONS)){
 			
-				case 0: lacorrida(0);
+				case 0: 
+					clear();
+					refresh();
+					lacorrida();
 					break;
-				case 1: choque();
+				case 1: 
+					clear();
+					refresh();
+					choque();
 					break;
-				case 2: autofan();
+				case 2: 
+					clear();
+					refresh();
+					autofan();
 					break;
-				case 3: apilada();
+				case 3: 
+					clear();	
+					refresh();
+					apilada();
 					break;
 				case 4: exit = 1;
 					break;

@@ -1,10 +1,15 @@
+#include<stdint.h>
+
+
 /*funcion de conteo de items en menues*/
 
 int counter(int updown, int reset, int count_max);
 
 /*funcion que muestra el menu principal*/
 void menu(void);
+/*funcion que muestra menu de efectos */
 void menu_efectos(void);
+/*funcion que muestra menu de ajustes */
 void menu_ajustes(void);
 /*funcion que gestiona la contrasenia*/
 int contrasenia(void);
@@ -21,10 +26,13 @@ void itob(int numero, int *matrix);
 /*funcion que maneja los leds haciendo uso de la libreria pigpio*/
 void interfaz(int *leds);
 
-/*funcion para ejecutar el efecto de autofantastico*/
+/*funciones de efectos*/
 void autofan(void);
-
 void choque(void);
-void lacorrida(int initial_time_value);
+void lacorrida(void);
 void apilada(void);
+
+/*funcion de control de velocidad por teclado*/
+
+uint32_t vel(int up_down);
 

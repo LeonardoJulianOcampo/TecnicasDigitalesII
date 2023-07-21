@@ -2,6 +2,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <pigpio.h>
+#include "tpo.h"
 #define tiempo    100000
 
 void autofan(void){
@@ -25,7 +26,7 @@ timeout(1);       //para que no espere a que se presione F2
 while(ch != KEY_F(2)){
   ch = getch();
     itob(numero,leds);
-       interfaz(leds,8);
+       interfaz(leds);
   
   if(numero!=1){
     numero=numero>>1;
@@ -35,7 +36,7 @@ while(ch != KEY_F(2)){
     while(numero!=128){
 
        itob(numero,leds);
-       interfaz(leds,8);
+       interfaz(leds);
       numero = numero<<1;
        gpioDelay(tiempo);
     }
@@ -44,10 +45,8 @@ while(ch != KEY_F(2)){
 
      for(i=0;i<8;i++)
       leds[i]=0;
-  	printf("\nF2 presionado.Sale.\n "); 
-    interfaz(leds,8);
+    interfaz(leds);
     gpioTerminate();
     refresh      ();
-    endwin       ();
 }
 
