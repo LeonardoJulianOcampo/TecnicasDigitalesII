@@ -1,12 +1,16 @@
+/*funcion de conteo de items en menues*/
+
+int counter(int updown, int reset, int count_max);
 
 /*funcion que muestra el menu principal*/
-int menu(void);
-
+void menu(void);
+void menu_efectos(void);
+void menu_ajustes(void);
 /*funcion que gestiona la contrasenia*/
 int contrasenia(void);
 
 /*funcion que gestiona los efectos mostrados en los leds*/
-int efecto(int);
+int efectos(int);
 
 /*funcion que detecta si flecha-arriba o flecha-abajo se presionaron para subir o bajar la velocidad*/
 

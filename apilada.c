@@ -1,3 +1,4 @@
+#include "tpo.h"
 #include <stdio.h>
 #include <ncurses.h>
 #include <stdlib.h>
@@ -34,20 +35,23 @@ void apilada(void){
     
     gpioInitialise();
 
-    initscr();                           //inicializo subrutinas de ncurses
     raw();
     noecho();
     keypad(stdscr,TRUE);
     nodelay(stdscr,TRUE);                          //para que no espere a que se presione F2
     
+    clear();
+
+	
 
     for (i = 0; i < 8; i++) {
     	leds[i] = 0;
     	aux[i] = 0;
 	}
 
-
-    while(ch != KEY_F(2)){      
+	interfaz(leds);
+    
+	while(ch != KEY_F(2)){      
         
         ch = getch();
 
@@ -57,10 +61,10 @@ void apilada(void){
             for (k = 0; k <= 7; k++){
                 aux[k]=0;
             }
-        interfaz(leds,8);
+        interfaz(leds);
         gpioDelay(tiempo);
         leds[ciclos]=0;
-        interfaz(leds,8);
+        interfaz(leds);
         gpioDelay(tiempo);
         ciclos = 7;   
         }
@@ -71,7 +75,7 @@ void apilada(void){
         
             for(k=0;k<=7;k++)
                 leds[k]=leds[k] || aux[k];
-            interfaz(leds,8);
+            interfaz(leds);
             gpioDelay(tiempo);
             
             for(i=0;i<=ciclos;i++){
@@ -81,16 +85,16 @@ void apilada(void){
                 for(k=0;k<=7;k++)
                     leds[k]=leds[k] || aux[k];  // OR bit a bit entre los elementos de leds y aux
                 
-                interfaz(leds,8);
+                interfaz(leds);
                 gpioDelay(tiempo);
             }
             
             leds[ciclos]=0;
-            interfaz(leds,8);
+            interfaz(leds);
             gpioDelay(tiempo);
             
             leds[ciclos]=1;
-            interfaz(leds,8);
+            interfaz(leds);
             gpioDelay(tiempo);
             ciclos --;                          // decremento en una unidad la variable ciclos
             
@@ -105,9 +109,11 @@ void apilada(void){
     for(i=0;i<8;i++)                        // Una vez que se rompe el ciclo se apagan los leds 
       leds[i]=0;
   	
-    interfaz(leds,8);
-    nodelay(stdscr,FALSE);
+      
+    interfaz(leds);
     gpioTerminate();
+    nodelay(stdscr,FALSE);
+    refresh      ();
 
 }
 

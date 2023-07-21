@@ -1,68 +1,84 @@
-#include <stdio.h>
 #include <string.h>
-#include <termios.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ncurses.h>
 
+#define MAX_ATTEMPTS 3
+#define PASSWORD "password123"
 
-#define CLAVE "abcd"
-#define FD_STDIN 0
-#define LONGITUD 80
+int row, col;
+
+void printCentered(const char* str, int row, int col) {
+    mvprintw(row / 2, (col - strlen(str)) / 2, "%s", str);
+}
 
 int contrasenia() {
-	char clave[LONGITUD + 1];
-	struct termios t_old, t_new;
-	int intento = 0;
-	int ingresa = 0;
-	char caracter;
-	int i = 0;
+    initscr();
+    raw();
+    noecho();
+    curs_set(0);
+    int attempts = 0;
+    char input[50];
+    int ch;
+    int pos = 0;
+    getmaxyx(stdscr, row, col);
+    int asterisk_pos[50];
 
-	tcgetattr(FD_STDIN, &t_old);
-	t_new = t_old;
-	t_new.c_lflag &= ~(ECHO | ICANON);
+    while (attempts < MAX_ATTEMPTS) {
+        clear();
+        printCentered("Ingrese la contraseña:", row, col);
+        refresh();
 
-	tcsetattr(FD_STDIN,TCSANOW,&t_new);	    
-    
-    do {
-        i = 0;
-        printf("\nIntroduzca la clave por favor\n");
-        printf("CLAVE: ");
-        while (caracter = getchar()) {
-            if (caracter == 10) {
-                clave[i] = '\0';
-                break;
-                
-            } else if (caracter == 8) {
-                if (i > 0) {
-                    i--;
-                    printf("\b \b");
+        while ((ch = getch()) != '\n') {
+            if (ch == 127 || ch == KEY_BACKSPACE) { // Manejar el caso de la tecla de retroceso
+                if (pos > 0) {
+                    pos--;
+                    // Borra el asterisco previo en la posición correspondiente
+                    mvprintw(row / 2 + 3, (col - strlen(PASSWORD)) / 2 + asterisk_pos[pos], " ");
+                    refresh();
                 }
-                
             } else {
-                if (i < LONGITUD) {
-                    printf("*");
-                    clave[i] = caracter;
-                    i++;
-                }
+                input[pos] = ch;
+                mvprintw(row / 2 + 3, (col - strlen(PASSWORD)) / 2 + pos, "*"); // Imprime el caracter como *
+                asterisk_pos[pos] = pos; // Almacena la posición x donde se imprimió el asterisco
+                refresh();
+                pos++;
             }
         }
-        
-        if (strcmp(clave, CLAVE) == 0) {
-            ingresa = 1;
-            
+
+        input[pos] = '\0'; // Agregar el carácter de terminación de cadena
+
+        if (strcmp(input, PASSWORD) == 0) {
+            clear();
+            printCentered("Contraseña correcta. Bienvenido!", row, col);
+            refresh();
+            getch();
+	    return 1;
+            break;
         } else {
-            printf("\nClave incorrecta. %d/3 Intento",intento+1);
-            intento++;
-            getchar();
+            attempts++;
+            pos = 0;
+
+            if (attempts < MAX_ATTEMPTS) {
+                clear();
+                printCentered("Contraseña incorrecta. Intentos restantes: ", row, col);
+		refresh();
+                mvprintw(row, col + 2, "%d", MAX_ATTEMPTS - attempts);
+                refresh();
+                getch();
+            }
         }
-        
-    } while (intento < 3 && ingresa == 0);
-    
-    if (ingresa == 1) {
-        printf("\n\t***Ingreso al sistema***\n");
-        tcsetattr(FD_STDIN,TCSANOW, &t_old);
-        return 1;
-    } else {
-        printf("\n\tDemasiados intentos!\n");
-        tcsetattr(FD_STDIN,TCSANOW, &t_old);
-        return 0;
     }
+
+    if (attempts == MAX_ATTEMPTS) {
+        clear();
+        printCentered("Ha excedido el número máximo de intentos.", row, col);
+        printCentered("El programa se cerrará.", row + 3, col);
+        refresh();
+        getch();
+	return 0;
+    }
+
+    endwin();
 }
+

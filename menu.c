@@ -1,56 +1,75 @@
 /*no recibe ningun valor. Imprime las opciones disponibles. Cuando se selecciona un valor correcto
- se devuelve ese valor como entero para ser tomado por la funcion 'efecto'
- */
+ se devuelve ese valor como entero para ser tomado por la funcion 'efecto'*/
 
-
-
+#include "tpo.h"
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <ncurses.h>
+#define OPTIONS 3
 
-int menu(void){
-	
-	int op;
-	int row, col;
-	
-	op=1;
-	
-	while(op != -1){
+void menu(void) {
+    int op, row, col;
+    int i;
+    int exit = 0;
+    char mesg[] = "   MENU PRINCIPAL   ";
+    char options[OPTIONS][30] = {
+        "Selección de Efectos",
+        "Ajustes       ",
+	"Salir        ",
+    };
 
-	system("clear");
-	printf("\n***MENU***");	
-	
-	printf("\n1)Apilada");
-	printf("\n2)Auto Fantastico");
-	printf("\n3)Choque");
-	printf("\n4)Salir\n");
-	scanf("%d",&op);
-	
-	 switch (op)
-	 {
-	 case 1: apilada();
-	 	op = 0;
-		 break;
-	 case 2: autofan();
-	 	op = 0;
-	 	 break;	
-	 case 3: choque();
-	 	op=0;
-		break;
+    initscr();
+    getmaxyx(stdscr, row, col);
+    raw();
+    keypad(stdscr, TRUE);
+    noecho();
+    nodelay(stdscr, FALSE); // Importante para que getch() espere a que se presione una tecla
+    curs_set(0);
 
-	 case 4: 
-		settings();
-	 	op = 0;
-		break;
-	
-	case 5: 
-		op = -1;
+    while (!exit) {
+        clear();
+        mvprintw(row / 2, (col - strlen(mesg)) / 2, mesg);
+	refresh();
 
-	default: printf("\nOperacion Invalida");
-		 break;
-	 }
 		
-	 if (op == -1)
-		 break;
+        for (i = 0; i < OPTIONS; i++) {
+            if (i == counter(-1,0,OPTIONS)) {
+                attron(A_STANDOUT); // Resaltar opción seleccionada
+                mvprintw(row / 2 + i + 1, (col - strlen(options[i])) / 2, "-> %s", options[i]);
+                attroff(A_STANDOUT);
+            } else {
+                mvprintw(row / 2 + i + 1, (col - strlen(options[i])) / 2, "   %s", options[i]);
+            }
+        }
 
-	}
+	op=getch();
+
+        switch (op) {
+            case KEY_UP:
+                counter(0,0,OPTIONS);
+                break;
+            case KEY_DOWN:
+                counter(1,0,OPTIONS);
+                break;
+            case 10: // Enter key
+                if (counter(-1,0,OPTIONS) == OPTIONS - 1)
+                    	exit = 1;
+                else if (counter(-1,0,OPTIONS)==0){
+			menu_efectos();
+			i = counter(-1,1,OPTIONS);
+		}
+		else
+			menu_ajustes(); 
+                refresh();
+                break;
+            default:
+                break;
+        }
+    }
+
+    endwin();
+
 }
+
+

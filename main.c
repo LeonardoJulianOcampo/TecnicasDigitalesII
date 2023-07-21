@@ -12,7 +12,7 @@ op=1;
 	if(contrasenia()==1){	
 			while(op){
 				menu();
-				op=0;	
+				break;
 			}
 }
 return 0;
