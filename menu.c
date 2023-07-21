@@ -1,7 +1,7 @@
 /*no recibe ningun valor. Imprime las opciones disponibles. Cuando se selecciona un valor correcto
  se devuelve ese valor como entero para ser tomado por la funcion 'efecto'*/
 
-
+#include "tpo.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,18 +52,17 @@ void menu(void) {
                 counter(1,0,OPTIONS);
                 break;
             case 10: // Enter key
-                if (counter(-1) == OPTIONS - 1)
+                if (counter(-1,0,OPTIONS) == OPTIONS - 1)
                     	exit = 1;
                 else if (counter(-1,0,OPTIONS)==0)
 			menu_efectos();
+			
 		else
 			menu_ajustes();
-                    mvprintw(2, 2, "Opción seleccionada: %s", options[counter(-1)]);
+                
+		mvprintw(2, 2, "Opción seleccionada: %s", options[counter(-1,0,OPTIONS)]);
                 refresh();
-                //getch(); // Esperar a que el usuario presione una tecla para continuar
-                break;
-            case 27: // Escape key
-                exit = 1;
+                getch(); // Esperar a que el usuario presione una tecla para continuar
                 break;
             default:
                 break;

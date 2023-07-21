@@ -4,7 +4,7 @@
 int counter(int select,int reset, int count_max) {
     static int count = 0;
 
-    if (reset = 1)
+    if (reset == 1)
 	count = 0;
     else if (select == 1 && count < count_max - 1)
         count++;
