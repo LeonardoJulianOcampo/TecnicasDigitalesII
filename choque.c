@@ -3,18 +3,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <pigpio.h>
-#define tiempo    100000
 
-/*
-int leds[7];
-int matrizA[7];
-int matrizB[7];
-
-int ida=128;
-int vuelta=2;
-int i,j,k;
-int ch;
-*/
 
 void choque(void){
 	
@@ -26,15 +15,26 @@ void choque(void){
 	int vuelta=1;
 	int i,j;
 	int ch;
-
+	int pigpioInitialized=0;
 
     gpioInitialise();
-    nodelay(stdscr,TRUE);
+
+    if(gpioInitialise()>=0)
+            pigpioInitialized = 1;
+    else 
+            pigpioInitialized = 0;
+
+    nodelay(stdscr,TRUE);                          //para que no espere a que se presione F2
+    clear();
+
+    // Crear un nuevo hilo para leer el teclado
+    pthread_t thread_id;
+    pthread_create(&thread_id, NULL, read_keyboard, NULL);
 
 
-    while(ch != KEY_F(2)){    
+
+    while(!s && pigpioInitialized){    
         
-        ch=getch();
         
         ida    = 128;
         vuelta =   1;
@@ -46,15 +46,26 @@ void choque(void){
 		interfaz(leds);
 		ida    =    ida >> 1;
             	vuelta = vuelta << 1;
-            	gpioDelay(tiempo);
+            	gpioDelay(time_factor);
         }
     }
 
 	for(i=0;i<=7;i++){
 		leds[i] = 0;
 	}
-	interfaz(leds);
-	gpioTerminate();
-	refresh();
-	nodelay(stdscr,FALSE);
+
+    // Detener el hilo de lectura del teclado
+    keep_reading = false;
+    pthread_join(thread_id, NULL);
+
+        
+    interfaz(leds);
+    gpioTerminate();
+    refresh();
+    nodelay(stdscr,FALSE);
+    keep_reading = true;
+    last_key = ERR;
+    s = 0;
+    pthread_cancel(thread_id);
+
 }

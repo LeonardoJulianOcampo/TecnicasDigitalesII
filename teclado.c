@@ -1,12 +1,6 @@
 #include <ncurses.h>
 #include "tpo.h"
 
-// Variable global para indicar si el hilo de lectura del teclado debe seguir ejecutándose
-extern bool keep_reading;
-// Variable global para almacenar la última tecla presionada
-extern int last_key;
-extern uint32_t time_factor;
-extern int s;
 
 // Función para leer el teclado en un hilo separado
 void *read_keyboard(void *arg) {

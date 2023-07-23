@@ -6,6 +6,17 @@
 #include <pthread.h>
 
 
+// Variable global para indicar si el hilo de lectura del teclado debe seguir ejecutándose
+extern bool keep_reading;
+// Variable global para almacenar la última tecla presionada
+extern int last_key;
+extern uint32_t time_factor;
+extern int s;
+
+
+
+
+
 /*funcion de conteo de items en menues*/
 
 int counter(int updown, int reset, int count_max);
@@ -23,7 +34,7 @@ int contrasenia(void);
 int efectos(int);
 
 /*funcion que detecta si flecha-arriba o flecha-abajo se presionaron para subir o bajar la velocidad*/
-void *read_keyboard(void *arg)
+void *read_keyboard(void *arg);
 
 /*funcion que convierte un entero a binario y luego almacena cada digito en un elemento de un array de 8 elementos*/
 void itob(int numero, int *matrix);
@@ -34,7 +45,7 @@ void interfaz(int *leds);
 /*funciones de efectos*/
 void autofan(void);
 void choque(void);
-void lacorrida(void);
+void lacarrera(void);
 void apilada(void);
 
 /*funcion de control de velocidad por teclado*/
