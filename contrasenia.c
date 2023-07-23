@@ -4,7 +4,7 @@
 #include <ncurses.h>
 
 #define MAX_ATTEMPTS 3
-#define PASSWORD "password123"
+#define PASSWORD "123"
 
 int row, col;
 
@@ -66,6 +66,7 @@ int contrasenia() {
                 mvprintw(row, col + 2, "%d", MAX_ATTEMPTS - attempts);
                 refresh();
                 getch();
+		halfdelay(1);
             }
         }
     }

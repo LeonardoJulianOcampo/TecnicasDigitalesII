@@ -8,7 +8,7 @@
 
 
 
-void lacarrera(void){
+void lacarrera(WINDOW *win){
 
 int led1=128;
 int led2=128;
@@ -56,6 +56,8 @@ while(!s && pigpioInitialized){
         led1 = led1 >> 1;
     }
 
+    print_efecto(win,0);
+    wrefresh(win);
     if(s==1)
 	break;
 
@@ -85,7 +87,7 @@ pthread_join(thread_id, NULL);
 
 interfaz(leds);
 gpioTerminate();
-refresh();
+wrefresh(win);
 nodelay(stdscr,FALSE);
 keep_reading = true;
 last_key = ERR;

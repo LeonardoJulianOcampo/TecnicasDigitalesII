@@ -3,7 +3,7 @@
 #include <pigpio.h>
 #include "tpo.h"
 
-void mov(void){
+void mov(WINDOW *win){
 
 int numero=170;
 int leds[8]   ;
@@ -36,12 +36,17 @@ interfaz(leds);
  
 
 while(!s && pigpioInitialized){
-	printw("%d\n",numero);
+
+	print_efecto(win,4);
+			
+	
 	itob(numero,leds);
 	interfaz(leds);
  	gpioDelay(time_factor);
 	numero = ~numero;
     	numero = numero & 255;
+	refresh();
+
  }
 
 for(i=0;i<8;i++) // Una vez que se rompe el ciclo se apagan los leds 

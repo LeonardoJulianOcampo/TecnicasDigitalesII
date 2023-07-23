@@ -3,7 +3,7 @@
 #include <pigpio.h>
 #include "tpo.h"
 
-void sirena(void){
+void sirena(WINDOW *win){
 
 int numero=15;
 int leds[8]   ;
@@ -34,9 +34,19 @@ leds[i] = 0;
 
 interfaz(leds);
  
-
+i=0;
 while(!s && pigpioInitialized){
-	printw("%d\n",numero);
+	
+	if (i<3)
+		i++;
+	else
+		i=0;
+		
+	if (i==0){
+		print_efecto(win,4);
+		wrefresh(win);
+	}
+
 	itob(numero,leds);
 	interfaz(leds);
  	gpioDelay(time_factor);
@@ -55,6 +65,7 @@ pthread_join(thread_id, NULL);
 interfaz(leds);
 gpioTerminate();
 refresh();
+wrefresh(win);
 nodelay(stdscr,FALSE);
 keep_reading = true;
 last_key = ERR;

@@ -4,7 +4,9 @@
 #include <pigpio.h>
 #include "tpo.h"
 
-void autofan(void){
+
+
+void autofan(WINDOW *win){
 
 int numero=128;
 int leds[8]   ;
@@ -40,6 +42,9 @@ while(!s && pigpioInitialized){
 	itob(numero,leds);
 	interfaz(leds);
   
+	print_efecto(win,2);  
+    	wrefresh(win);
+
   if(numero!=1){
     	numero=numero>>1;
 	gpioDelay(time_factor);}

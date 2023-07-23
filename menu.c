@@ -9,55 +9,55 @@
 
 #define OPTIONS 3
 
-#define WCLINES 50
-#define WCCOLS  80
+#define WCLINES 20
+#define WCCOLS  60
 
-#define WCX     10
-#define WCY     10
+#define WCX     4
+#define WCY     4
 
    
 
 void menu(void) {
-    int op, row, col;
+    int op, row, col,wcol,wrow;
     int i;
     int exit = 0;
-    char mesg[] = "MENU PRINCIPAL";
+    char mesg[] = "   MENU PRINCIPAL   ";
     char options[OPTIONS][30] = {
         "Selección de Efectos",
-        "Ajustes       ",
-	"Salir        ",
+        "Ajustes             ",
+	"Salir               ",
     };
-
     initscr();
-    start_color();
     raw();
-    keypad(stdscr, TRUE);
+    keypad(stdscr,TRUE);
     noecho();
     nodelay(stdscr, FALSE); // Importante para que getch() espere a que se presione una tecla
     curs_set(0);
 
-    WINDOW * win_corner = subwin(stdscr, WCLINES, WCCOLS, WCX, WCY);
+    getmaxyx(stdscr,row,col);
 
-    getmaxyx(win_corner, row, col);
+    WINDOW * win_corner = subwin(stdscr, WCLINES, WCCOLS, 10, 10);
 
 
+    getmaxyx(win_corner, wrow, wcol);
 
     while (!exit) {
         clear();
 	box(win_corner,0,0);
-        mvwprintw(win_corner,1,1, mesg);
-	refresh();
+        mvwprintw(win_corner,2,(wcol-strlen(mesg))/2, mesg);
+	mvwprintw(win_corner,18,2,"ENTER: Seleccionar Opcion. UP/DOWN: cambiar opcion");
+	wrefresh(win_corner);
 
 		
         for (i = 0; i < OPTIONS; i++) {
             if (i == counter(-1,0,OPTIONS)) {
-                wattron(A_STANDOUT); // Resaltar opción seleccionada
-                mvwprintw(win_corner,2,1, "-> %s", options[i]);
-                wattroff(A_STANDOUT);
+                wattron(win_corner,A_STANDOUT); // Resaltar opción seleccionada
+                mvwprintw(win_corner,(wrow-5) / 2 + i + 1, (wcol - strlen(options[i])) / 2, "%s", options[i]);
+		wattroff(win_corner,A_STANDOUT);
             } else {
-                mvwprintw(win_corner,2+i,1,"   %s", options[i]);
-            }
-	    refresh();
+                mvwprintw(win_corner,(wrow-5) / 2 + i + 1, (wcol - strlen(options[i])) / 2, "%s", options[i]);
+	    	
+	    }
         }
 
 	op=getch();
@@ -73,21 +73,18 @@ void menu(void) {
                 if (counter(-1,0,OPTIONS) == OPTIONS - 1)
                     	exit = 1;
                 else if (counter(-1,0,OPTIONS)==0){
-			menu_efectos();
+			menu_efectos(win_corner);
 			i = counter(-1,1,OPTIONS);
 		}
 		else
 			menu_ajustes(); 
-                refresh();
+                	refresh();
                 break;
             default:
                 break;
         }
-	refresh();
     }
-
     endwin();
-
 }
 
 

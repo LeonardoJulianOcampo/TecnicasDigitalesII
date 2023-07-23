@@ -16,7 +16,7 @@ uint32_t time_factor=10000;
 int s = 0;
 
 
-void apilada(){
+void apilada(WINDOW *win){
     int i,k;
     int ciclos = 7;
     int leds[8];
@@ -51,9 +51,10 @@ void apilada(){
 
         interfaz(leds);
     
-        while(!s && pigpioInitialized){      
-                // Procesar la última tecla presionada
-	printw("%d\n",time_factor);
+        while(!s && pigpioInitialized){
+
+	
+
         if(ciclos == 0){
             leds[ciclos]=1;
             gpioDelay(time_factor);
@@ -67,31 +68,34 @@ void apilada(){
         gpioDelay(time_factor);
         ciclos = 7;   
         }
+	
+	print_efecto(win,3);
 
         valor = 128;
         itob(valor,leds);
         gpioDelay(time_factor);
-        
+      	wrefresh(win); 
             for(k=0;k<=7;k++)
                 leds[k]=leds[k] || aux[k];
             interfaz(leds);
             gpioDelay(time_factor);
-            
+       	    wrefresh(win);           
             for(i=0;i<=ciclos;i++){
                 valor = valor >> 1;              // a valor lo desplazo en una unidad hacia la derecha
                 itob(valor,leds);
-                
-                for(k=0;k<=7;k++)
-                    leds[k]=leds[k] || aux[k];  // OR bit a bit entre los elementos de leds y aux
+                   
+	    for(k=0;k<=7;k++)
+                leds[k]=leds[k] || aux[k];  // OR bit a bit entre los elementos de leds y aux
                 
                 interfaz(leds);
                 gpioDelay(time_factor);
+      		wrefresh(win);
             }
-            
+            wrefresh(win);
             leds[ciclos]=0;
             interfaz(leds);
             gpioDelay(time_factor);
-            
+      	    wrefresh(win);
             leds[ciclos]=1;
             interfaz(leds);
             gpioDelay(time_factor);
@@ -116,6 +120,7 @@ void apilada(){
     interfaz(leds);
     gpioTerminate();
     refresh();
+    wrefresh(win);
     nodelay(stdscr,FALSE);
     keep_reading = true;
     last_key = ERR;

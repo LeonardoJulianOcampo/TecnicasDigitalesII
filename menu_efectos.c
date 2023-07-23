@@ -6,8 +6,8 @@
 
 #define OPTIONS 7
 
-void menu_efectos(void){
-	int op,row,col;
+void menu_efectos(WINDOW *win){
+	int op,row,col,wcol,wrow;
 	int exit = 0;
 	char title[] = "MENU DE EFECTOS";
 	char options[OPTIONS][30] = {"La carrera",
@@ -19,22 +19,26 @@ void menu_efectos(void){
 				     "Salir"};
 	getmaxyx(stdscr,row,col);
 	clear();
+	getmaxyx(win, wrow, wcol);
 
 	while(!exit){
 		clear();
-		mvprintw(row/2,(col - strlen(title))/2,title);
+		box(win,0,0);
+		mvwprintw(win,2,(wcol - strlen(title))/2,title);
+		mvwprintw(win,18,2,"ENTER: Seleccionar Opcion. UP/DOWN: cambiar opcion");
+
 
 		for (int i = 0; i < OPTIONS; i++) {
             		if (i == counter(-1,0,OPTIONS)) {
-                		attron(A_STANDOUT); // Resaltar opción seleccionada
-                		mvprintw(row / 2 + i + 1, (col - strlen(options[i])) / 2, "-> %s", options[i]);
-                		attroff(A_STANDOUT);
+                		wattron(win,A_STANDOUT); // Resaltar opción seleccionada
+		                mvwprintw(win,(wrow-5) / 2 + i + 1, (wcol - strlen(options[i])) / 2, "%s", options[i]);
+                		wattroff(win,A_STANDOUT);
             		} else {
-                mvprintw(row / 2 + i + 1, (col - strlen(options[i])) / 2, "   %s", options[i]);
-            		}
+                		mvwprintw(win,(wrow-5) / 2 + i + 1, (wcol - strlen(options[i])) / 2, "%s", options[i]);
+			}
         	}
 
-		refresh();
+		wrefresh(win);
 		op = getch();
 
 
@@ -51,33 +55,33 @@ void menu_efectos(void){
 			
 				case 0: 
 					clear();
-					refresh();
-					lacarrera();
+					wrefresh(win);
+					lacarrera(win);
 					break;
 				case 1: 
 					clear();
-					refresh();
-					choque();
+					wrefresh(win);
+					choque(win);
 					break;
 				case 2: 
 					clear();
-					refresh();
-					autofan();
+					wrefresh(win);
+					autofan(win);
 					break;
 				case 3: 
 					clear();	
-					refresh();
-					apilada();
+					wrefresh(win);
+					apilada(win);
 					break;
 				case 4:
 					clear();
-					refresh();
-					sirena();
+					wrefresh(win);
+					sirena(win);
 					break;
 				case 5: 
 					clear();
-					refresh();
-					mov();
+					wrefresh(win);
+					mov(win);
 					break;
 				case 6: exit = 1;
 					break;
@@ -85,7 +89,7 @@ void menu_efectos(void){
 
 			}
 
-			mvprintw(2, 2, "Opción seleccionada: %s", options[counter(-1,0,OPTIONS)]);
+			wrefresh(win);
 			refresh();
 			//getch(); // Esperar a que el usuario presione una tecla para continuar
 			break;
@@ -98,5 +102,5 @@ void menu_efectos(void){
 	 
 
 	}
-
+endwin();
 }

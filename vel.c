@@ -20,7 +20,7 @@ uint32_t vel(int up_down) {
             return step_vel;
             break;
         case 0:
-            if (step_vel > 10000) {
+            if (step_vel > 20000) {
                 step_vel = step_vel - 10000;
                 return step_vel;
             } else {

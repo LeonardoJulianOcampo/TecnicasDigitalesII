@@ -5,7 +5,7 @@
 #include <pigpio.h>
 
 
-void choque(void){
+void choque(WINDOW *win){
 	
 	int leds[8];
 	int matrizA[8];
@@ -25,7 +25,6 @@ void choque(void){
             pigpioInitialized = 0;
 
     nodelay(stdscr,TRUE);                          //para que no espere a que se presione F2
-    clear();
 
     // Crear un nuevo hilo para leer el teclado
     pthread_t thread_id;
@@ -39,7 +38,9 @@ void choque(void){
         ida    = 128;
         vuelta =   1;
 	resultado = 0;
-        	
+	
+
+
         for(i=0;i<=7;i++){
 		resultado = ida + vuelta;
 		itob(resultado,leds);
@@ -48,11 +49,16 @@ void choque(void){
             	vuelta = vuelta << 1;
             	gpioDelay(time_factor);
         }
+
+	print_efecto(win,1);
+	wrefresh(win);
     }
 
 	for(i=0;i<=7;i++){
 		leds[i] = 0;
 	}
+	
+
 
     // Detener el hilo de lectura del teclado
     keep_reading = false;
@@ -61,7 +67,7 @@ void choque(void){
         
     interfaz(leds);
     gpioTerminate();
-    refresh();
+    wrefresh(win);
     nodelay(stdscr,FALSE);
     keep_reading = true;
     last_key = ERR;
