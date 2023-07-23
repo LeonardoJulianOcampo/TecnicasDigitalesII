@@ -38,7 +38,7 @@ void apilada(WINDOW *win){
             pigpioInitialized = 0;
 
     nodelay(stdscr,TRUE);                          //para que no espere a que se presione F2
-    clear();
+
 
     // Crear un nuevo hilo para leer el teclado
     pthread_t thread_id;
@@ -126,4 +126,5 @@ void apilada(WINDOW *win){
     last_key = ERR;
     s = 0;
     pthread_cancel(thread_id);
+
 }

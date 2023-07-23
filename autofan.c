@@ -24,7 +24,6 @@ else
     pigpioInitialized = 0;
 
 nodelay(stdscr,TRUE);                          //para que no espere a que se presione F2
-clear();
 
 
 // Crear un nuevo hilo para leer el teclado
@@ -39,15 +38,18 @@ interfaz(leds);
  
 
 while(!s && pigpioInitialized){
-	itob(numero,leds);
-	interfaz(leds);
   
 	print_efecto(win,2);  
     	wrefresh(win);
+	itob(numero,leds);
+	interfaz(leds);
 
   if(numero!=1){
     	numero=numero>>1;
-	gpioDelay(time_factor);}
+	itob(numero,leds);
+	interfaz(leds);
+	gpioDelay(time_factor);
+	}
   else
     while(numero!=128){
        	itob(numero,leds);
@@ -69,6 +71,7 @@ pthread_join(thread_id, NULL);
 interfaz(leds);
 gpioTerminate();
 refresh();
+wrefresh(win);
 nodelay(stdscr,FALSE);
 keep_reading = true;
 last_key = ERR;

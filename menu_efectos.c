@@ -54,32 +54,32 @@ void menu_efectos(WINDOW *win){
 			switch(counter(-1,0,OPTIONS)){
 			
 				case 0: 
-					clear();
+					wclear(win);
 					wrefresh(win);
 					lacarrera(win);
 					break;
 				case 1: 
-					clear();
+					wclear(win);
 					wrefresh(win);
 					choque(win);
 					break;
 				case 2: 
-					clear();
+					wclear(win);
 					wrefresh(win);
 					autofan(win);
 					break;
 				case 3: 
-					clear();	
+					wclear(win);	
 					wrefresh(win);
 					apilada(win);
 					break;
 				case 4:
-					clear();
+					wclear(win);
 					wrefresh(win);
 					sirena(win);
 					break;
 				case 5: 
-					clear();
+					wclear(win);
 					wrefresh(win);
 					mov(win);
 					break;
