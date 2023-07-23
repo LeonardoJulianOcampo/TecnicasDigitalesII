@@ -21,7 +21,8 @@ initscr();
 raw();
 noecho();
 keypad(stdscr,TRUE);
-timeout(1);       //para que no espere a que se presione F2
+nodelay(stdscr,TRUE);
+
 
 while(ch != KEY_F(2)){
   ch = getch();
@@ -47,6 +48,7 @@ while(ch != KEY_F(2)){
       leds[i]=0;
     interfaz(leds);
     gpioTerminate();
+    nodelay(stdscr,FALSE);
     refresh      ();
 }
 

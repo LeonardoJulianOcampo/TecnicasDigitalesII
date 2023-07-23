@@ -8,6 +8,14 @@
 #define tiempo 100000
 
 
+ // Variable global para indicar si el hilo de lectura del teclado debe seguir ejecutándose
+bool keep_reading = true;
+// Variable global para almacenar la última tecla presionada
+int last_key = ERR;
+uint32_t time_factor=10000;
+int s = 0;
+
+
 void apilada(){
     int i,k;
     int ciclos = 7;
@@ -17,7 +25,6 @@ void apilada(){
     int mascara_off = 0;
     int resultante[8]={0};
     int valor = 128;
-//    uint32_t time_factor = 10000;
     int ch=0;
 //    int exit = 0;
     int pigpioInitialized = 0;
@@ -46,8 +53,7 @@ void apilada(){
     
         while(!s && pigpioInitialized){      
                 // Procesar la última tecla presionada
-
-	printw("%d",time_factor);
+	printw("%d\n",time_factor);
         if(ciclos == 0){
             leds[ciclos]=1;
             gpioDelay(time_factor);
@@ -113,4 +119,5 @@ void apilada(){
     nodelay(stdscr,FALSE);
     keep_reading = true;
     last_key = ERR;
+    s = 0;
 }

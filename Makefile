@@ -1,8 +1,8 @@
 #generacion del programa tpo
 
-OBJS = main.o apilada.o atoib.o autofan.o choque.o contrasenia.o lacorrida.o interfaz_salida.o menu.o menu_efectos.o menu_ajustes.o counter.o vel.o 
-CFLAGS = -o
-COMPILER = gcc
+OBJS = main.o apilada.o atoib.o autofan.o choque.o contrasenia.o lacorrida.o interfaz_salida.o menu.o menu_efectos.o menu_ajustes.o counter.o vel.o teclado.o
+CFLAGS = -o 
+COMPILER = gcc -g
 LFLAGS = -lncurses -lpigpio -lpthread 
 
 tpo: $(OBJS)
@@ -49,6 +49,9 @@ lacorrida.o: lacorrida.c tpo.h
 
 vel.o: vel.c tpo.h
 	gcc -c vel.c
+
+teclado.o: teclado.c tpo.h
+	gcc -c teclado.c
 
 clean: 
 	rm -f tpo *.o
