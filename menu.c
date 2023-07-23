@@ -51,9 +51,9 @@ void menu(void) {
 		
         for (i = 0; i < OPTIONS; i++) {
             if (i == counter(-1,0,OPTIONS)) {
-                attron(A_STANDOUT); // Resaltar opción seleccionada
+                wattron(A_STANDOUT); // Resaltar opción seleccionada
                 mvwprintw(win_corner,2,1, "-> %s", options[i]);
-                attroff(A_STANDOUT);
+                wattroff(A_STANDOUT);
             } else {
                 mvwprintw(win_corner,2+i,1,"   %s", options[i]);
             }
