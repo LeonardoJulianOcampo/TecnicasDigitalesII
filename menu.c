@@ -6,13 +6,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ncurses.h>
+
 #define OPTIONS 3
+
+#define WCLINES 50
+#define WCCOLS  80
+
+#define WCX     10
+#define WCY     10
+
+   
 
 void menu(void) {
     int op, row, col;
     int i;
     int exit = 0;
-    char mesg[] = "   MENU PRINCIPAL   ";
+    char mesg[] = "MENU PRINCIPAL";
     char options[OPTIONS][30] = {
         "Selección de Efectos",
         "Ajustes       ",
@@ -20,27 +29,35 @@ void menu(void) {
     };
 
     initscr();
-    getmaxyx(stdscr, row, col);
+    start_color();
     raw();
     keypad(stdscr, TRUE);
     noecho();
     nodelay(stdscr, FALSE); // Importante para que getch() espere a que se presione una tecla
     curs_set(0);
 
+    WINDOW * win_corner = subwin(stdscr, WCLINES, WCCOLS, WCX, WCY);
+
+    getmaxyx(win_corner, row, col);
+
+
+
     while (!exit) {
         clear();
-        mvprintw(row / 2, (col - strlen(mesg)) / 2, mesg);
+	box(win_corner,0,0);
+        mvwprintw(win_corner,1,1, mesg);
 	refresh();
 
 		
         for (i = 0; i < OPTIONS; i++) {
             if (i == counter(-1,0,OPTIONS)) {
                 attron(A_STANDOUT); // Resaltar opción seleccionada
-                mvprintw(row / 2 + i + 1, (col - strlen(options[i])) / 2, "-> %s", options[i]);
+                mvwprintw(win_corner,2,1, "-> %s", options[i]);
                 attroff(A_STANDOUT);
             } else {
-                mvprintw(row / 2 + i + 1, (col - strlen(options[i])) / 2, "   %s", options[i]);
+                mvwprintw(win_corner,2+i,1,"   %s", options[i]);
             }
+	    refresh();
         }
 
 	op=getch();
@@ -66,6 +83,7 @@ void menu(void) {
             default:
                 break;
         }
+	refresh();
     }
 
     endwin();
