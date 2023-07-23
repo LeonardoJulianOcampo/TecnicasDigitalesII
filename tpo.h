@@ -47,7 +47,8 @@ void autofan(void);
 void choque(void);
 void lacarrera(void);
 void apilada(void);
-
+void sirena(void);
+void mov(void);
 /*funcion de control de velocidad por teclado*/
 
 uint32_t vel(int up_down);

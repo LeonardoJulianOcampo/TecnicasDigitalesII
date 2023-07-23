@@ -4,16 +4,18 @@
 #include <stdlib.h>
 #include <ncurses.h>
 
-#define OPTIONS 5
+#define OPTIONS 7
 
 void menu_efectos(void){
 	int op,row,col;
 	int exit = 0;
 	char title[] = "MENU DE EFECTOS";
-	char options[OPTIONS][30] = {"La corrida",
+	char options[OPTIONS][30] = {"La carrera",
 				     "Choque",
 				     "Auto fantástico",
 				     "Apilada",
+				     "Sirena",
+				     "Move",
 				     "Salir"};
 	getmaxyx(stdscr,row,col);
 	clear();
@@ -50,7 +52,7 @@ void menu_efectos(void){
 				case 0: 
 					clear();
 					refresh();
-					lacorrida();
+					lacarrera();
 					break;
 				case 1: 
 					clear();
@@ -67,7 +69,17 @@ void menu_efectos(void){
 					refresh();
 					apilada();
 					break;
-				case 4: exit = 1;
+				case 4:
+					clear();
+					refresh();
+					sirena();
+					break;
+				case 5: 
+					clear();
+					refresh();
+					mov();
+					break;
+				case 6: exit = 1;
 					break;
 
 
