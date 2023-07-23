@@ -1,4 +1,9 @@
-#include<stdint.h>
+#include <stdio.h>
+#include <ncurses.h>
+#include <stdlib.h>
+#include <pigpio.h>
+#include <stdint.h>
+#include <pthread.h>
 
 
 /*funcion de conteo de items en menues*/
@@ -35,4 +40,7 @@ void apilada(void);
 /*funcion de control de velocidad por teclado*/
 
 uint32_t vel(int up_down);
+void *read_keyboard(void *arg);
+
+
 
