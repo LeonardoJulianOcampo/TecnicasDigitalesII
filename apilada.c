@@ -120,4 +120,5 @@ void apilada(){
     keep_reading = true;
     last_key = ERR;
     s = 0;
+    pthread_cancel(thread_id);
 }
