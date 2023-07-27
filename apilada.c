@@ -16,6 +16,7 @@ uint32_t time_factor=10000;
 int s = 0;
 
 
+
 void apilada(WINDOW *win){
     int i,k;
     int ciclos = 7;
@@ -53,7 +54,8 @@ void apilada(WINDOW *win){
     
         while(!s && pigpioInitialized){
 
-	
+	print_efecto(win,3);
+	wrefresh(win);
 
         if(ciclos == 0){
             leds[ciclos]=1;
@@ -70,6 +72,8 @@ void apilada(WINDOW *win){
         }
 	
 	print_efecto(win,3);
+	if(s==1)
+		break;
 
         valor = 128;
         itob(valor,leds);
@@ -88,19 +92,26 @@ void apilada(WINDOW *win){
                 leds[k]=leds[k] || aux[k];  // OR bit a bit entre los elementos de leds y aux
                 
                 interfaz(leds);
+		print_efecto(win,3);
+		wrefresh(win);
                 gpioDelay(time_factor);
-      		wrefresh(win);
             }
             wrefresh(win);
             leds[ciclos]=0;
             interfaz(leds);
             gpioDelay(time_factor);
+	    print_efecto(win,3);
       	    wrefresh(win);
             leds[ciclos]=1;
             interfaz(leds);
             gpioDelay(time_factor);
+	    print_efecto(win,3);
+	    wrefresh(win);
             ciclos --;                          // decremento en una unidad la variable ciclos
             
+	    if (s==1)
+		    break;
+
             for(int k=0;k<=7;k++){              // ciclo para cargar el ultimo valor de valor en buffer 
                 aux[k]=leds[k] || aux[k];
             }

@@ -63,5 +63,5 @@ print_efecto.o: print_efecto.c tpo.h
 	gcc -c print_efecto.c
 
 clean: 
-	rm -f tpo *.o
+	rm -f *.o
 
