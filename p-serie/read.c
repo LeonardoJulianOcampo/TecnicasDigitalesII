@@ -14,7 +14,6 @@ int main() {
     }
 
     struct termios tty;
-    memset(&tty, 0, sizeof(tty));
 
     // Configuración del puerto serie
     if (tcgetattr(serial_port, &tty) != 0) {
