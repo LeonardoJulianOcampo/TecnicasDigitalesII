@@ -4,9 +4,20 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <ncurses.h>
+
 
 int main() {
-    int serial_port = open("/dev/ttyS0", O_RDWR); // Reemplaza "/dev/ttyS0" por el nombre correcto de tu puerto serie (ejemplo: "/dev/ttyUSB0" para un adaptador USB-serial)
+    int serial_port = open("/dev/ttyUSB0", O_RDWR); // Reemplaza "/dev/ttyS0" por el nombre correcto de tu puerto serie (ejemplo: "/dev/ttyUSB0" para un adaptador USB-serial)
+    int exit = 1;
+    int ch; 
+
+	initscr();
+	raw();
+	keypad(stdscr,TRUE);
+	noecho();
+	nodelay(stdscr,TRUE);
+
 
     if (serial_port < 0) {
         perror("Error al abrir el puerto serie");
@@ -14,7 +25,6 @@ int main() {
     }
 
     struct termios tty;
-    memset(&tty, 0, sizeof(tty));
 
     // Configuración del puerto serie
     if (tcgetattr(serial_port, &tty) != 0) {
@@ -39,13 +49,20 @@ int main() {
     }
 
     uint32_t data_to_send = 123456; // Valor que queremos enviar
-
+    
+    while(exit){
     // Enviamos el valor de uint32_t en modo raw (bytes sin procesar)
+    printw("ch=%d",ch);
     if (write(serial_port, &data_to_send, sizeof(data_to_send)) < 0) {
-        perror("Error al escribir en el puerto serie");
+	printw("Error al abrir el puerto");
+	refresh();
+	exit=0;
+   	 }
+    ch = getch();
+    if(ch == KEY_F(2))	
+	exit = 0;
     }
-
     close(serial_port);
+    endwin();
     return 0;
 }
-
