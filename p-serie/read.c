@@ -38,11 +38,14 @@ int main() {
         return 1;
     }
 
-    uint32_t data_to_send = 123456; // Valor que queremos enviar
+    uint32_t received_data;
 
-    // Enviamos el valor de uint32_t en modo raw (bytes sin procesar)
-    if (write(serial_port, &data_to_send, sizeof(data_to_send)) < 0) {
-        perror("Error al escribir en el puerto serie");
+    // Leemos el valor de uint32_t en modo raw (bytes sin procesar)
+    if (read(serial_port, &received_data, sizeof(received_data)) < 0) {
+        perror("Error al leer del puerto serie");
+    } else {
+        // Mostramos el valor recibido
+        printf("Valor recibido: %u\n", received_data);
     }
 
     close(serial_port);
