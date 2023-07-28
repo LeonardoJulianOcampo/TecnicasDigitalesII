@@ -4,9 +4,21 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <ncurses.h>
+
 
 int main() {
-    int serial_port = open("/dev/ttyS0", O_RDWR); // Reemplaza "/dev/ttyS0" por el nombre correcto de tu puerto serie (ejemplo: "/dev/ttyUSB0" para un adaptador USB-serial)
+    int serial_port = open("/dev/ttyAMA0", O_RDWR); // Reemplaza "/dev/ttyS0" por el nombre correcto de tu puerto serie (ejemplo: "/dev/ttyUSB0" para un adaptador USB-serial)
+
+    int exit =1;
+    int ch;
+
+    initscr();
+    raw();
+    keypad(stdscr,TRUE);
+    noecho();
+    nodelay(stdscr,TRUE);
+
 
     if (serial_port < 0) {
         perror("Error al abrir el puerto serie");
@@ -37,16 +49,19 @@ int main() {
         return 1;
     }
 
-    uint32_t received_data;
-
-    // Leemos el valor de uint32_t en modo raw (bytes sin procesar)
-    if (read(serial_port, &received_data, sizeof(received_data)) < 0) {
-        perror("Error al leer del puerto serie");
-    } else {
-        // Mostramos el valor recibido
-        printf("Valor recibido: %u\n", received_data);
+    uint32_t received_data=0;
+    while(exit){
+	    // Leemos el valor de uint32_t en modo raw (bytes sin procesar)
+	    if (read(serial_port, &received_data, sizeof(received_data)) < 0) {
+		printw("Error al leer del puerto serie\n");
+	    } 
+	    else {
+		// Mostramos el valor recibido
+		printw("Valor recibido: %u\n", received_data);
+	    }
+	    if(ch==KEY_F(2))
+		    exit = 0;
     }
-
     close(serial_port);
     return 0;
 }
