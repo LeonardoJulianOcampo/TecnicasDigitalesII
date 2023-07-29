@@ -6,8 +6,8 @@
 #define STEPS 400000
 
 
-uint32_t vel(int up_down) {
-    static uint32_t step_vel = STEPS;
+int vel(int up_down) {
+    static int step_vel = STEPS;
     curs_set(0);
 
     switch (up_down) {
