@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <ncurses.h>
 
 int main() {
     int serial_port = open("/dev/ttyUSB0", O_RDWR); // Reemplaza "/dev/ttyS0" por el nombre correcto de tu puerto serie (ejemplo: "/dev/ttyUSB0" para un adaptador USB-serial)
@@ -12,6 +13,12 @@ int main() {
         perror("Error al abrir el puerto serie");
         return 1;
     }
+
+    initscr();
+    raw();
+    keypad(stdscr, TRUE);
+    noecho();
+    nodelay(stdscr, TRUE);
 
     struct termios tty;
 
@@ -37,17 +44,35 @@ int main() {
         return 1;
     }
 
-    uint32_t received_data;
+    int ch;
+    char data_to_send;
 
-    // Leemos el valor de uint32_t en modo raw (bytes sin procesar)
-    if (read(serial_port, &received_data, sizeof(received_data)) < 0) {
-        perror("Error al leer del puerto serie");
-    } else {
-        // Mostramos el valor recibido
-        printf("Valor recibido: %u\n", received_data);
+    while (1) {
+        // Leer el carácter ingresado usando ncurses
+        ch = getch();
+
+        // Detectar la tecla presionada
+        if (ch == KEY_UP) {
+            data_to_send = '1'; // Enviar '1' si se presionó la tecla Up
+        } else if (ch == KEY_DOWN) {
+            data_to_send = '0'; // Enviar '0' si se presionó la tecla Down
+        } else if (ch == 'q' || ch == 'Q') {
+            break; // Salir del bucle si se presiona 'q' o 'Q'
+        } else {
+            continue; // Continuar con el siguiente ciclo si no se presionó una tecla válida
+        }
+
+        // Enviar el carácter a través del puerto serie
+        if (write(serial_port, &data_to_send, sizeof(data_to_send)) < 0) {
+            perror("Error al enviar datos por el puerto serie");
+            close(serial_port);
+            endwin(); // Finalizar la ventana ncurses antes de salir
+            return 1;
+        }
     }
 
     close(serial_port);
+    endwin();
+
     return 0;
 }
-
