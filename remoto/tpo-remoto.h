@@ -4,13 +4,19 @@
 #include <stdint.h>
 #include <pthread.h>
 #include <stdbool.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <termios.h>
+#include <string.h>
+
+
 
 
 // Variable global para indicar si el hilo de lectura del teclado debe seguir ejecutándose
 extern bool keep_reading;
 // Variable global para almacenar la última tecla presionada
 extern int last_key;
-extern uint32_t time_factor;
+extern int time_factor;
 extern int s;
 
 
@@ -49,8 +55,14 @@ void sirena(WINDOW *win);
 void mov(WINDOW *win);
 /*funcion de control de velocidad por teclado*/
 
-uint32_t vel(int up_down);
+int vel(int up_down);
 void *read_keyboard(void *arg);
 
 void print_efecto(WINDOW *win, int op);
+
+int open_port(const char * device, uint32_t baud_rate);
+int write_port(int fd, uint8_t * buffer, size_t size);
+ssize_t read_port(int fd,uint8_t * buffer, size_t size);
+
+
 

@@ -1,9 +1,9 @@
 #generacion del programa tpo-remoto
 
-OBJS = main.o apilada.o autofan.o choque.o contrasenia.o lacarrera.o menu.o menu_efectos.o menu_ajustes.o counter.o vel.o teclado.o sirena.o move.o print_efecto.o
+OBJS = main.o apilada.o autofan.o choque.o contrasenia.o lacarrera.o menu.o menu_efectos.o menu_ajustes.o counter.o vel.o teclado.o sirena.o move.o print_efecto.o serial.o
 CFLAGS = -o 
 COMPILER = gcc -g
-LFLAGS = -ltinfo -lncurses -lpthread 
+LFLAGS = -ltinfo -lncurses -lpthread -lm 
 
 tpo-remoto: $(OBJS)
 	$(COMPILER) $(CFLAGS) tpo-remoto $(OBJS) $(LFLAGS) 
@@ -58,6 +58,9 @@ move.o: move.c tpo-remoto.h
 
 print_efecto.o: print_efecto.c tpo-remoto.h
 	gcc -c print_efecto.c
+
+serial.o: serial.c tpo-remoto.h
+	gcc -c serial.c
 
 clean: 
 	rm -f *.o
