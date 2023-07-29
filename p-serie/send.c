@@ -8,7 +8,7 @@
 
 
 int main() {
-    int serial_port = open("/dev/ttyUSB0", O_RDWR); // Reemplaza "/dev/ttyS0" por el nombre correcto de tu puerto serie (ejemplo: "/dev/ttyUSB0" para un adaptador USB-serial)
+    int serial_port = open("/dev/ttyAMA0", O_RDWR); // Reemplaza "/dev/ttyS0" por el nombre correcto de tu puerto serie (ejemplo: "/dev/ttyUSB0" para un adaptador USB-serial)
     int exit = 1;
     int ch; 
 
@@ -52,7 +52,6 @@ int main() {
     
     while(exit){
     // Enviamos el valor de uint32_t en modo raw (bytes sin procesar)
-    printw("ch=%d",ch);
     if (write(serial_port, &data_to_send, sizeof(data_to_send)) < 0) {
 	printw("Error al abrir el puerto");
 	refresh();
