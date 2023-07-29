@@ -37,17 +37,20 @@ int main() {
         return 1;
     }
 
-    uint32_t received_data;
+    char data_received;
 
-    // Leemos el valor de uint32_t en modo raw (bytes sin procesar)
-    if (read(serial_port, &received_data, sizeof(received_data)) < 0) {
-        perror("Error al leer del puerto serie");
-    } else {
-        // Mostramos el valor recibido
-        printf("Valor recibido: %u\n", received_data);
+    while (1) {
+        // Leer los datos del puerto serie
+        ssize_t bytes_read = read(serial_port, &data_received, sizeof(data_received));
+        if (bytes_read < 0) {
+            perror("Error al leer datos del puerto");
+            close(serial_port);
+            return 1;
+        } else if (bytes_read == sizeof(data_received)) {
+            // Mostrar los datos recibidos
+            printf("Dato recibido: %c\n", data_received);
+        }
     }
 
     close(serial_port);
-    return 0;
-}
 
