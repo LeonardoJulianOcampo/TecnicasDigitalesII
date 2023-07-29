@@ -1,10 +1,10 @@
 #include "tpo-remoto.h"
-#include <stdio.h>
+/* #include <stdio.h>
 #include <stdbool.h>
 #include <ncurses.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <pthread.h>
+#include <pthread.h> */
 #define tiempo 100000
 #define elements 7
 

@@ -1,7 +1,6 @@
 #include "tpo-remoto.h"
 
 
-
 int open_port(const char * device, uint32_t baud_rate){
 
 	int fd = open(device, O_RDWR | O_NOCTTY);
@@ -38,8 +37,8 @@ int open_port(const char * device, uint32_t baud_rate){
 
 	//configuración de la velocidad del puerto. 9600 baudios
 	
-	cfsetospeed(&tty,B9600);
-	cfsetispeed(&tty,B9600);
+	cfsetospeed(&tty,B115200);
+	cfsetispeed(&tty,B115200);
 
 	result = tcsetattr(fd, TCSANOW, &tty);
 
@@ -76,6 +75,5 @@ ssize_t read_port(int fd,uint8_t * buffer, size_t size){
 
 	return received;
 }
-
 
 
