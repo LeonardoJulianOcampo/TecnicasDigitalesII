@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <termios.h>
 #include <string.h>
+#include <stdlib.h>
 
 int open_port(const char * device, uint32_t baud_rate){
 
@@ -41,8 +42,8 @@ int open_port(const char * device, uint32_t baud_rate){
 
 	//configuración de la velocidad del puerto. 9600 baudios
 	
-	cfsetospeed(&tty,B9600);
-	cfsetispeed(&tty,B9600);
+	cfsetospeed(&tty,B115200);
+	cfsetispeed(&tty,B115200);
 
 	result = tcsetattr(fd, TCSANOW, &tty);
 
@@ -85,16 +86,18 @@ ssize_t read_port(int fd,uint8_t * buffer, size_t size){
 int main(void){
 
 	const char * device = "/dev/ttyAMA0";
-	uint8_t buffer[2] = {0};
+	uint8_t buffer[7] = {0};
 	int fd;
 	int wp;
+	int value;
 
 	fd = open_port(device,9600);
 	if (fd<0) return 1;
 
 	while(1){
 		read_port(fd,buffer,sizeof(buffer));
-		printf("%s\n",buffer);
+		value = atoi(buffer);
+		printf("%d\n",value);
 		memset(buffer,0,sizeof(buffer));
 	}
 	close(fd);
