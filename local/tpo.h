@@ -4,7 +4,7 @@
 #include <pigpio.h>
 #include <stdint.h>
 #include <pthread.h>
-
+#include <stdbool.h>
 
 // Variable global para indicar si el hilo de lectura del teclado debe seguir ejecutándose
 extern bool keep_reading;
@@ -13,7 +13,7 @@ extern int last_key;
 extern uint32_t time_factor;
 extern int s;
 
-
+extern pthread_mutex_t t_factor_mutex;
 
 
 

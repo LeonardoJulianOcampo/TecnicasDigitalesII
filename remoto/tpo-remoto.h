@@ -10,14 +10,15 @@
 #include <string.h>
 
 
-
+extern pthread_mutex_t key_mutex;
 
 // Variable global para indicar si el hilo de lectura del teclado debe seguir ejecutándose
 extern bool keep_reading;
 // Variable global para almacenar la última tecla presionada
 extern int last_key;
 extern int time_factor;
-extern int s;
+extern uint8_t key; //variable que almacena la tecla presionada durante la ejecución de los efectos
+extern int s;   // bandera que cambia de valor cuando se presiona F2. Se usa para romper bucles
 
 
 

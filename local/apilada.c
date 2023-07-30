@@ -16,6 +16,21 @@ uint32_t time_factor=10000;
 int s = 0;
 
 
+void delaynprint(uint32_t delay_time){
+	int i =0;
+
+	while(i<=delay_time){
+		wrefresh(win);
+		if (s==1) break;          //en caso de que se haya detectado la tecla F2 se rompe el bucle
+		print_efecto(win,3);
+		gpioDelay(100);          //espera 100 us por ciclo
+		i ++;
+
+	}
+
+}
+
+
 
 void apilada(WINDOW *win){
     int i,k;
@@ -38,12 +53,19 @@ void apilada(WINDOW *win){
     else 
             pigpioInitialized = 0;
 
-    nodelay(stdscr,TRUE);                          //para que no espere a que se presione F2
+    nodelay(stdscr,TRUE);                          //para que getch no espere enter luego de leer el teclado
 
 
-    // Crear un nuevo hilo para leer el teclado
-    pthread_t thread_id;
-    pthread_create(&thread_id, NULL, read_keyboard, NULL);
+    // Crear un nuevo hilo para leer el teclado (solo para el caso de modo local)
+
+    if (control_flag == true){
+    	pthread_t thread_id;
+    	pthread_create(&thread_id, NULL, read_keyboard, NULL);      // 
+    }else{
+	pthread_t thread_id;
+	pthread_create(&thread_id,NULL, read_s_port,NULL);
+
+    } 
 
     for (i = 0; i < 8; i++) {
         leds[i] = 0;
@@ -59,15 +81,15 @@ void apilada(WINDOW *win){
 
         if(ciclos == 0){
             leds[ciclos]=1;
-            gpioDelay(time_factor);
+            delaynprint(time_factor);
             for (k = 0; k <= 7; k++){
                 aux[k]=0;
             }
         interfaz(leds);
-        gpioDelay(time_factor);
+	delaynprint(time_factor);
         leds[ciclos]=0;
         interfaz(leds);
-        gpioDelay(time_factor);
+        delaynprint(time_factor);
         ciclos = 7;   
         }
 	
@@ -77,12 +99,12 @@ void apilada(WINDOW *win){
 
         valor = 128;
         itob(valor,leds);
-        gpioDelay(time_factor);
+        delaynprint(time_factor);
       	wrefresh(win); 
             for(k=0;k<=7;k++)
                 leds[k]=leds[k] || aux[k];
             interfaz(leds);
-            gpioDelay(time_factor);
+            delaynprint(time_factor);
        	    wrefresh(win);           
             for(i=0;i<=ciclos;i++){
                 valor = valor >> 1;              // a valor lo desplazo en una unidad hacia la derecha
@@ -94,18 +116,16 @@ void apilada(WINDOW *win){
                 interfaz(leds);
 		print_efecto(win,3);
 		wrefresh(win);
-                gpioDelay(time_factor);
+                delaynprint(time_factor);
             }
             wrefresh(win);
             leds[ciclos]=0;
             interfaz(leds);
-            gpioDelay(time_factor);
-	    print_efecto(win,3);
+            delaynprint(time_factor);
       	    wrefresh(win);
             leds[ciclos]=1;
             interfaz(leds);
-            gpioDelay(time_factor);
-	    print_efecto(win,3);
+            delaynprint(time_factor);
 	    wrefresh(win);
             ciclos --;                          // decremento en una unidad la variable ciclos
             
@@ -123,11 +143,14 @@ void apilada(WINDOW *win){
     for(i=0;i<8;i++)                        // Una vez que se rompe el ciclo se apagan los leds 
       leds[i]=0;
 
-    // Detener el hilo de lectura del teclado
+    // Detener el hilo de lectura del teclado si se encuentra activado el modo local o la lectura del puerto serie si el modo activo es el remoto
     keep_reading = false;
-    pthread_join(thread_id, NULL);
 
-        
+    if(control_flag == true){
+    	pthread_join(thread_id, NULL);
+    	pthread_cancel(thread_id);
+    }
+     
     interfaz(leds);
     gpioTerminate();
     refresh();
@@ -136,6 +159,5 @@ void apilada(WINDOW *win){
     keep_reading = true;
     last_key = ERR;
     s = 0;
-    pthread_cancel(thread_id);
 
 }

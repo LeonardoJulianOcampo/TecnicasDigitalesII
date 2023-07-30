@@ -35,7 +35,7 @@ int open_port(const char * device, uint32_t baud_rate){
 	tty.c_cc[VMIN]  = 0;
 
 
-	//configuración de la velocidad del puerto. 9600 baudios
+	//configuración de la velocidad del puerto. 115200 baudios para menor latencia
 	
 	cfsetospeed(&tty,B115200);
 	cfsetispeed(&tty,B115200);
