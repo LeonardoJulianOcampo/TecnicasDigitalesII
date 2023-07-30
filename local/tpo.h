@@ -13,7 +13,8 @@ extern int last_key;
 extern uint32_t time_factor;
 extern int s;
 
-
+/* Variable global para almacenar la opcion de modo local o remoto */
+extern bool control_flag;
 
 
 
@@ -55,4 +56,21 @@ uint32_t vel(int up_down);
 void *read_keyboard(void *arg);
 
 void print_efecto(WINDOW *win, int op);
+
+
+/*funcion de control de modo local/remoto */
+
+int s_cntl_mode(WINDOW * win);
+
+
+/*funcion de lectura de adc para condiciones iniciales */
+
+int s_intl_cond(WINDOW * win);
+
+
+
+
+
+
+
 

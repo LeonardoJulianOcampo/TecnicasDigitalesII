@@ -1,15 +1,21 @@
+/* Funcion que determina si el control es remoto o no. En caso afirmativo setea la bandera control en 1, que es una variable global que luego es empleada 
+ * en las funciones de efectos para determinar si se realiza la lectura del teclado de forma local o si se tiene que leer el puerto serie
+ 
+ */
+
+
 #include "tpo.h"
 
-#define OPTIONS 2
 
+bool control_flag;
 
+void s_cntl_mode(WINDOW * win){
 
-void menu_ajustes(WINDOW *win){
 	int op,row,col,wcol,wrow;
 	int exit = 0;
-	char title[] = "Ajustes";
-	char options[OPTIONS][30] = {"Selección de modo local/remoto",
-				     "    Condiciones iniciales     "};
+	char title[] = "Selección de modo local/remoto";
+	char options[OPTIONS][30] = {"Modo Local ",
+				     "Modo Remoto"};
 	getmaxyx(stdscr,row,col);
 	clear();
 	getmaxyx(win, wrow, wcol);
@@ -49,12 +55,17 @@ void menu_ajustes(WINDOW *win){
 				case 0: 
 					wclear(win);
 					wrefresh(win);
-					s_cntl_mode(win);
+					control_flag = 1; //bandera global de control de modo (1 para modo local)
+					napms(20);
+					exit = 1;
 					break;
 				case 1: 
 					wclear(win);
 					wrefresh(win);
 					s_intl_cond(win);
+					control_flag = 0;  //bandera global de control de modo (0 para modo remoto)
+					napms(20);
+					exit = 1;
 					break;
 				default:
 					wclear(win);
@@ -78,3 +89,6 @@ void menu_ajustes(WINDOW *win){
 	}
 endwin();
 
+
+
+}

@@ -86,7 +86,7 @@ ssize_t read_port(int fd,uint8_t * buffer, size_t size){
 int main(void){
 
 	const char * device = "/dev/ttyAMA0";
-	uint8_t buffer[7] = {0};
+	uint8_t buffer[50] = {0};
 	int fd;
 	int wp;
 	int value;

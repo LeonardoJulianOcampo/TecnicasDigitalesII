@@ -15,7 +15,7 @@ int last_key = ERR;
 uint32_t time_factor=10000;
 int s = 0;
 
-
+bool control_flag;
 
 void apilada(WINDOW *win){
     int i,k;
@@ -41,9 +41,18 @@ void apilada(WINDOW *win){
     nodelay(stdscr,TRUE);                          //para que no espere a que se presione F2
 
 
-    // Crear un nuevo hilo para leer el teclado
-    pthread_t thread_id;
-    pthread_create(&thread_id, NULL, read_keyboard, NULL);
+    // Crear un nuevo hilo para leer el teclado solo si se está activado el modo local. Caso contrario este hilo no se crea y no se lee el teclado
+    if(control_flag == TRUE){
+    	pthread_t thread_id;
+    	pthread_create(&thread_id, NULL, read_keyboard, NULL);
+    }
+    //En caso de que esta habilitado el control remoto se crea un hilo nuevo donde se ejecuta la funcion que lee el puerto
+    else{                                    
+	pthread_t thread_id;
+	pthread_create(&thread_id, NULL, read_port,NULL);  //read_port se debe encargar de leer el puerto y además de interpretar los caracteres de control del teclado remoto    
+    }
+
+
 
     for (i = 0; i < 8; i++) {
         leds[i] = 0;
@@ -123,10 +132,10 @@ void apilada(WINDOW *win){
     for(i=0;i<8;i++)                        // Una vez que se rompe el ciclo se apagan los leds 
       leds[i]=0;
 
-    // Detener el hilo de lectura del teclado
+    // Detener el hilo de lectura del teclado. Ocurre tanto para el modo local como para el modo remoto
     keep_reading = false;
     pthread_join(thread_id, NULL);
-
+    pthread_cancel(thread_id);
         
     interfaz(leds);
     gpioTerminate();
@@ -136,6 +145,5 @@ void apilada(WINDOW *win){
     keep_reading = true;
     last_key = ERR;
     s = 0;
-    pthread_cancel(thread_id);
 
 }
