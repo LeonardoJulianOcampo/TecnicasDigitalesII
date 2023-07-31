@@ -22,12 +22,12 @@ void menu_efectos(WINDOW *win){
 	clear();
 	getmaxyx(win, wrow, wcol);
 
-	while(!exit && control_flag == true){
+
+	while(!exit && control_flag){
 		clear();
 		box(win,0,0);
 		mvwprintw(win,2,(wcol - strlen(title))/2,title);
 		mvwprintw(win,18,2,"ENTER: Seleccionar Opcion. UP/DOWN: cambiar opcion");
-
 
 		for (int i = 0; i < OPTIONS; i++) {
             		if (i == counter(-1,0,OPTIONS)) {
@@ -109,7 +109,7 @@ void menu_efectos(WINDOW *win){
 	}
 
 
-	while(!exit && control_flag == false){                         // este bucle es el que se ejecuta cuando el control remoto se encuentra habilitado
+	while(!exit && !control_flag){                         // este bucle es el que se ejecuta cuando el control remoto se encuentra habilitado
 	
 		bool cont = true;
 
@@ -126,7 +126,7 @@ void menu_efectos(WINDOW *win){
 		
 
 		while(cont){
-		
+	    	
 			read_port(fd,buffer,sizeof(key));	//para la clave solo se emplea un caracter de información
 			key = atoi(buffer);                     //convierto el caracter a int
 			

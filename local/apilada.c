@@ -11,8 +11,6 @@
  // Variable global para indicar si el hilo de lectura del teclado debe seguir ejecutándose
 bool keep_reading = true;
 
-bool control_flag = true;
-
 // Variable global para almacenar la última tecla presionada
 int last_key = ERR;
 uint32_t time_factor=10000;
@@ -65,7 +63,7 @@ void apilada(WINDOW *win){
 
     pthread_t thread_id;
 
-    if (control_flag == true){
+    if (control_flag){
     	pthread_create(&thread_id, NULL, read_keyboard, NULL);      // 
     }else{
 	pthread_t thread_id;

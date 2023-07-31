@@ -8,7 +8,7 @@ void menu_ajustes(WINDOW *win){
 	int op,row,col,wcol,wrow;
 	int exit = 0;
 	char title[] = "MENU DE AJUSTES";
-	char options[OPTIONS][30] = {"Selección de modo local/remoto",
+	char options[OPTIONS][31] = {"   Sel. de modo local/remoto  ",
                   				     "    Condiciones iniciales     ",
                                "            Salir             "};
 

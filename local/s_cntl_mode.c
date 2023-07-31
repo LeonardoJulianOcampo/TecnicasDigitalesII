@@ -18,9 +18,6 @@ void s_cntl_mode(WINDOW * win){
 	clear();
 	getmaxyx(win, wrow, wcol);
 
-  bool control_flag = true;
-
-
 	while(!exit){
 		clear();
 		box(win,0,0);
@@ -57,15 +54,12 @@ void s_cntl_mode(WINDOW * win){
 					wclear(win);
 					wrefresh(win);
 					control_flag = true; //bandera global de control de modo (1 para modo local)
-					napms(20);
 					exit = 1;
 					break;
 				case 1: 
 					wclear(win);
 					wrefresh(win);
-					//s_intl_cond(win);
 					control_flag = false;  //bandera global de control de modo (0 para modo remoto)
-					napms(20);
 					exit = 1;
 					break;
 				default:
@@ -79,11 +73,11 @@ void s_cntl_mode(WINDOW * win){
 			refresh();
 			//getch(); // Esperar a que el usuario presione una tecla para continuar
 			break;
-		    case 27: // Escape key
-			exit = 1;
-			break;
+		    case KEY_F(2): // Escape key
+			    exit = 1;
+			    break;
 		    default:
-			break;
+			    break;
 		}
 	 
 

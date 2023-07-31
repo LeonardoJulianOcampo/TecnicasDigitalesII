@@ -2,10 +2,6 @@
  se devuelve ese valor como entero para ser tomado por la funcion 'efecto'*/
 
 #include "tpo.h"
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <ncurses.h>
 
 #define OPTIONS 3
 
@@ -15,7 +11,7 @@
 #define WCX     4
 #define WCY     4
 
-   
+bool control_flag = true;
 
 void menu(void) {
     int op, row, col,wcol,wrow;
@@ -37,7 +33,8 @@ void menu(void) {
     getmaxyx(stdscr,row,col);
 
     WINDOW * win_corner = subwin(stdscr, WCLINES, WCCOLS, 10, 10);
-
+    
+    control_flag = true;
 
     getmaxyx(win_corner, wrow, wcol);
 
@@ -48,6 +45,7 @@ void menu(void) {
 	mvwprintw(win_corner,18,2,"ENTER: Seleccionar Opcion. UP/DOWN: cambiar opcion");
 	wrefresh(win_corner);
 
+    mvwprintw(win_corner,17,2,"control_flag: %d",control_flag);
 		
         for (i = 0; i < OPTIONS; i++) {
             if (i == counter(-1,0,OPTIONS)) {
