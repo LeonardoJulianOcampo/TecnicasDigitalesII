@@ -73,12 +73,12 @@ ssize_t read_port(int fd,uint8_t * buffer, size_t size);
 
 /*funcion de control de modo local/remoto */
 
-int s_cntl_mode(WINDOW * win);
+void s_cntl_mode(WINDOW * win);
 
 
 /*funcion de lectura de adc para condiciones iniciales */
 
-int s_intl_cond(WINDOW * win);
+void s_intl_cond(WINDOW * win);
 
 
 

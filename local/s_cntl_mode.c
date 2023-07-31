@@ -6,6 +6,7 @@
 
 #include "tpo.h"
 
+#define OPTIONS 2
 
 bool control_flag;
 

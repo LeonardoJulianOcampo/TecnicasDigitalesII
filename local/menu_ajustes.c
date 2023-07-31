@@ -54,7 +54,7 @@ void menu_ajustes(WINDOW *win){
 				case 1: 
 					wclear(win);
 					wrefresh(win);
-					s_intl_cond(win);
+					//s_intl_cond(win);
 					break;
 				default:
 					wclear(win);
