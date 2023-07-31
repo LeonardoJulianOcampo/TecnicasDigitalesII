@@ -73,8 +73,8 @@ void menu_ajustes(WINDOW *win){
 		    default:
 			break;
 		}
-	 
+	} 
 
-	}
 endwin();
+	}
 

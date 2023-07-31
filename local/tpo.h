@@ -5,6 +5,11 @@
 #include <stdint.h>
 #include <pthread.h>
 #include <stdbool.h>
+#include <termios.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+
 
 // Variable global para indicar si el hilo de lectura del teclado debe seguir ejecutándose
 extern bool keep_reading;
@@ -28,7 +33,7 @@ void menu(void);
 /*funcion que muestra menu de efectos */
 void menu_efectos(WINDOW *win);
 /*funcion que muestra menu de ajustes */
-void menu_ajustes(void);
+void menu_ajustes(WINDOW *win);
 /*funcion que gestiona la contrasenia*/
 int contrasenia(void);
 
@@ -55,9 +60,16 @@ void mov(WINDOW *win);
 
 uint32_t vel(int up_down);
 void *read_keyboard(void *arg);
-
+void *read_s_port(void *arg);
 void print_efecto(WINDOW *win, int op);
 
+
+
+/*funciones de manipulación del puerto serie*/
+
+int open_port(const char * device, uint32_t baud_rate);
+int write_port(int fd, uint8_t * buffer, size_t size);
+ssize_t read_port(int fd,uint8_t * buffer, size_t size);
 
 /*funcion de control de modo local/remoto */
 

@@ -10,7 +10,7 @@ pthread_mutex_t t_factor_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
 void *read_s_port(void *arg){
-	
+	int fd;	
 	uint8_t buffer[8]={"0"};
 	uint8_t tecla = 0;
 
@@ -23,6 +23,6 @@ void *read_s_port(void *arg){
 				
 	}
 
-return NULL
+return NULL;
 
 }

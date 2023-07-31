@@ -17,7 +17,7 @@ int s = 0;
 
 bool control_flag;
 
-void delaynprint(uint32_t delay_time){
+void delaynprint(uint32_t delay_time, WINDOW *win){
 	int i =0;
 
 	while(i<=delay_time){
@@ -59,14 +59,13 @@ void apilada(WINDOW *win){
 
     // Crear un nuevo hilo para leer el teclado (solo para el caso de modo local)
 
+    pthread_t thread_id;
 
     if (control_flag == true){
-    	pthread_t thread_id;
     	pthread_create(&thread_id, NULL, read_keyboard, NULL);      // 
     }else{
 	pthread_t thread_id;
 	pthread_create(&thread_id,NULL, read_s_port,NULL);
-
     } 
 
     for (i = 0; i < 8; i++) {
@@ -83,15 +82,15 @@ void apilada(WINDOW *win){
 
         if(ciclos == 0){
             leds[ciclos]=1;
-            delaynprint(time_factor);
+            delaynprint(time_factor,win);
             for (k = 0; k <= 7; k++){
                 aux[k]=0;
             }
         interfaz(leds);
-	delaynprint(time_factor);
+	delaynprint(time_factor,win);
         leds[ciclos]=0;
         interfaz(leds);
-        delaynprint(time_factor);
+        delaynprint(time_factor,win);
         ciclos = 7;   
         }
 	
@@ -101,12 +100,12 @@ void apilada(WINDOW *win){
 
         valor = 128;
         itob(valor,leds);
-        delaynprint(time_factor);
+        delaynprint(time_factor,win);
       	wrefresh(win); 
             for(k=0;k<=7;k++)
                 leds[k]=leds[k] || aux[k];
             interfaz(leds);
-            delaynprint(time_factor);
+            delaynprint(time_factor,win);
        	    wrefresh(win);           
             for(i=0;i<=ciclos;i++){
                 valor = valor >> 1;              // a valor lo desplazo en una unidad hacia la derecha
@@ -118,16 +117,16 @@ void apilada(WINDOW *win){
                 interfaz(leds);
 		print_efecto(win,3);
 		wrefresh(win);
-                delaynprint(time_factor);
+                delaynprint(time_factor,win);
             }
             wrefresh(win);
             leds[ciclos]=0;
             interfaz(leds);
-            delaynprint(time_factor);
+            delaynprint(time_factor,win);
       	    wrefresh(win);
             leds[ciclos]=1;
             interfaz(leds);
-            delaynprint(time_factor);
+            delaynprint(time_factor,win);
 	    wrefresh(win);
             ciclos --;                          // decremento en una unidad la variable ciclos
             

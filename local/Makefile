@@ -1,6 +1,6 @@
 #generacion del programa tpo
 
-OBJS = main.o apilada.o atoib.o autofan.o choque.o contrasenia.o lacarrera.o interfaz_salida.o menu.o menu_efectos.o menu_ajustes.o counter.o vel.o teclado.o sirena.o move.o print_efecto.o
+OBJS = main.o apilada.o atoib.o autofan.o choque.o contrasenia.o lacarrera.o interfaz_salida.o menu.o menu_efectos.o menu_ajustes.o counter.o vel.o teclado.o sirena.o move.o print_efecto.o read_s_port.o serial.o s_cntl_mode.o s_intl_cond.o s_intl_cond.o s_cntl_mode.o
 CFLAGS = -o 
 COMPILER = gcc -g
 LFLAGS = -lncurses -lpigpio -lpthread 
@@ -61,6 +61,18 @@ move.o: move.c tpo.h
 
 print_efecto.o: print_efecto.c tpo.h
 	gcc -c print_efecto.c
+
+read_s_port.o: read_s_port.c tpo.h
+	gcc -c read_s_port.c
+
+open_port.o: serial.c tpo.h
+	gcc -c serial.c
+
+s_intl_cond: s_intl_cond.c tpo.h
+	gcc -c s_intl_cond.c
+
+s_cntl_mode: s_cntl_mode.c tpo.h
+	gcc -c s_cntl_mode.c
 
 clean: 
 	rm -f *.o

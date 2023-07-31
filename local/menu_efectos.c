@@ -14,6 +14,10 @@ void menu_efectos(WINDOW *win){
 				     "Sirena",
 				     "Move",
 				     "Salir"};
+	int         fd    = open_port("/dev/ttyAMA0",115200);			
+	uint8_t buffer[1] = {"0"};  	
+	int key;
+
 	getmaxyx(stdscr,row,col);
 	clear();
 	getmaxyx(win, wrow, wcol);
@@ -107,21 +111,18 @@ void menu_efectos(WINDOW *win){
 		box(win,0,0);
 		mvwprintw(win,2,(wcol - strlen(title_remoto))/2,title_remoto);
 		mvwprintw(win,18,2,"F2 para volver.");
-		op = getch()
+		op = getch();
 
 		/********************************************************************************************************************************************************************************************************************
 		 * El siguiente bucle se implementa para que se lea constantemente el puerto serie hasta que se envie desde el programa remoto una combinación de caracteres que coincida con la de alguno de los efectos de luces. *
 		 * cuando eso suceda se disparará alguna de las funciones de efectos luminosos. Caso contrario, el programa queda esperando a no ser que se vuelva al menu anterior con la tecla F2.                                *
 		 ********************************************************************************************************************************************************************************************************************/
 		
-		int         fd    = open_port("/dev/ttyAMA0",115200);			
-		uint8_t buffer[1] = {"0"};  	
-		int key;
 
 		while(cont){
 		
 			read_port(fd,buffer,sizeof(key));	//para la clave solo se emplea un caracter de información
-			key = atoi(buffer);       //convierto el caracter a int
+			key = atoi(buffer);                     //convierto el caracter a int
 			
 			switch (key){
 				

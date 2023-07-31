@@ -77,7 +77,7 @@ void menu(void) {
 			i = counter(-1,1,OPTIONS);
 		}
 		else
-			menu_ajustes(); 
+			menu_ajustes(win_corner); 
                 	refresh();
                 break;
             default:
