@@ -1,25 +1,28 @@
 #include "tpo.h"
 
-#define OPTIONS 2
+#define OPTIONS 3
 
 
 
 void menu_ajustes(WINDOW *win){
 	int op,row,col,wcol,wrow;
 	int exit = 0;
-	char title[] = "Ajustes";
+	char title[] = "MENU DE AJUSTES";
 	char options[OPTIONS][30] = {"Selección de modo local/remoto",
-				     "    Condiciones iniciales     "};
+                  				     "    Condiciones iniciales     ",
+                               "            Salir             "};
+
 	getmaxyx(stdscr,row,col);
-	clear();
+  clear();
 	getmaxyx(win, wrow, wcol);
+
 
 	while(!exit){
 		clear();
 		box(win,0,0);
 		mvwprintw(win,2,(wcol - strlen(title))/2,title);
 		mvwprintw(win,18,2,"ENTER: Seleccionar Opcion. UP/DOWN: cambiar opcion");
-
+    
 
 		for (int i = 0; i < OPTIONS; i++) {
             		if (i == counter(-1,0,OPTIONS)) {
@@ -42,6 +45,10 @@ void menu_ajustes(WINDOW *win){
 		    case KEY_DOWN:
 			counter(1,0,OPTIONS);
 			break;
+        case KEY_F(2):
+          exit = 1;
+          break; 
+
 		    case 10: // Enter key
 			
 			switch(counter(-1,0,OPTIONS)){
@@ -56,6 +63,9 @@ void menu_ajustes(WINDOW *win){
 					wrefresh(win);
 					//s_intl_cond(win);
 					break;
+
+        case 2:
+          exit = 1;
 				default:
 					wclear(win);
 					wrefresh(win);

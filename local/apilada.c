@@ -10,12 +10,16 @@
 
  // Variable global para indicar si el hilo de lectura del teclado debe seguir ejecutándose
 bool keep_reading = true;
+
+bool control_flag = true;
+
 // Variable global para almacenar la última tecla presionada
 int last_key = ERR;
 uint32_t time_factor=10000;
 int s = 0;
 
-bool control_flag;
+
+
 
 void delaynprint(uint32_t delay_time, WINDOW *win){
 	int i =0;

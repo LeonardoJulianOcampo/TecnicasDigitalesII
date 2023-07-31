@@ -68,7 +68,7 @@ read_s_port.o: read_s_port.c tpo.h
 serial.o: serial.c tpo.h
 	gcc -c serial.c
 
-s_cntl_mode: s_cntl_mode.c tpo.h
+s_cntl_mode.o: s_cntl_mode.c tpo.h
 	gcc -c s_cntl_mode.c
 
 clean: 

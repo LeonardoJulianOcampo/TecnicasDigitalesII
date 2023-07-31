@@ -22,7 +22,7 @@ void menu_efectos(WINDOW *win){
 	clear();
 	getmaxyx(win, wrow, wcol);
 
-	while(!exit && control_flag == false){
+	while(!exit && control_flag == true){
 		clear();
 		box(win,0,0);
 		mvwprintw(win,2,(wcol - strlen(title))/2,title);
@@ -50,41 +50,47 @@ void menu_efectos(WINDOW *win){
 		    case KEY_DOWN:
 			counter(1,0,OPTIONS);
 			break;
+
+        case KEY_F(2):
+            exit = 1;
+            break;
+
 		    case 10: // Enter key
 			
-			switch(counter(-1,0,OPTIONS)){
-			
-				case 0: 
-					wclear(win);
-					wrefresh(win);
-					lacarrera(win);
-					break;
-				case 1: 
-					wclear(win);
-					wrefresh(win);
-					choque(win);
-					break;
-				case 2: 
-					wclear(win);
-					wrefresh(win);
-					autofan(win);
-					break;
-				case 3: 
-					wclear(win);	
-					wrefresh(win);
-					apilada(win);
-					break;
-				case 4:
-					wclear(win);
-					wrefresh(win);
-					sirena(win);
-					break;
-				case 5: 
-					wclear(win);
-					wrefresh(win);
-					mov(win);
-					break;
-				case 6: exit = 1;
+            switch(counter(-1,0,OPTIONS)){
+            
+              case 0: 
+                wclear(win);
+                wrefresh(win);
+                lacarrera(win);
+                break;
+              case 1: 
+                wclear(win);
+                wrefresh(win);
+                choque(win);
+                break;
+              case 2: 
+                wclear(win);
+                wrefresh(win);
+                autofan(win);
+                break;
+              case 3: 
+                wclear(win);	
+                wrefresh(win);
+                apilada(win);
+                break;
+              case 4:
+                wclear(win);
+                wrefresh(win);
+                sirena(win);
+                break;
+              case 5: 
+                wclear(win);
+                wrefresh(win);
+                mov(win);
+                break;
+              case 6: exit = 1;
+
 					break;
 
 

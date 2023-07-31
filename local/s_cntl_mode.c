@@ -5,10 +5,7 @@
 
 
 #include "tpo.h"
-
 #define OPTIONS 2
-
-bool control_flag;
 
 void s_cntl_mode(WINDOW * win){
 
@@ -20,6 +17,9 @@ void s_cntl_mode(WINDOW * win){
 	getmaxyx(stdscr,row,col);
 	clear();
 	getmaxyx(win, wrow, wcol);
+
+  bool control_flag = true;
+
 
 	while(!exit){
 		clear();
@@ -56,15 +56,15 @@ void s_cntl_mode(WINDOW * win){
 				case 0: 
 					wclear(win);
 					wrefresh(win);
-					control_flag = 1; //bandera global de control de modo (1 para modo local)
+					control_flag = true; //bandera global de control de modo (1 para modo local)
 					napms(20);
 					exit = 1;
 					break;
 				case 1: 
 					wclear(win);
 					wrefresh(win);
-					s_intl_cond(win);
-					control_flag = 0;  //bandera global de control de modo (0 para modo remoto)
+					//s_intl_cond(win);
+					control_flag = false;  //bandera global de control de modo (0 para modo remoto)
 					napms(20);
 					exit = 1;
 					break;
