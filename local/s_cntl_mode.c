@@ -17,7 +17,6 @@ void s_cntl_mode(WINDOW * win){
 	getmaxyx(stdscr,row,col);
 	clear();
 	getmaxyx(win, wrow, wcol);
-
 	while(!exit){
 		clear();
 		box(win,0,0);
@@ -40,44 +39,31 @@ void s_cntl_mode(WINDOW * win){
 
 
 		switch (op) {
-		    case KEY_UP:
-			counter(0,0,OPTIONS);
-			break;
-		    case KEY_DOWN:
-			counter(1,0,OPTIONS);
-			break;
-		    case 10: // Enter key
-			
-			switch(counter(-1,0,OPTIONS)){
-			
-				case 0: 
-					wclear(win);
-					wrefresh(win);
-					control_flag = true; //bandera global de control de modo (1 para modo local)
-					exit = 1;
-					break;
-				case 1: 
-					wclear(win);
-					wrefresh(win);
-					control_flag = false;  //bandera global de control de modo (0 para modo remoto)
-					exit = 1;
-					break;
-				default:
-					wclear(win);
-					wrefresh(win);
-					break;
-
-			}
-
-			wrefresh(win);
-			refresh();
-			//getch(); // Esperar a que el usuario presione una tecla para continuar
-			break;
-		    case KEY_F(2): // Escape key
-			    exit = 1;
-			    break;
-		    default:
-			    break;
+		    case KEY_UP  : counter(0,0,OPTIONS); break;
+		    case KEY_DOWN: counter(1,0,OPTIONS); break;
+		    case 10:
+          switch(counter(-1,0,OPTIONS)){ 
+            case 0: 
+              wclear(win);
+              wrefresh(win);
+              control_flag = true; //bandera global de control de modo (1 para modo local)
+              exit = 1;
+              break;
+            case 1: 
+              wclear(win);
+              wrefresh(win);
+              control_flag = false;  //bandera global de control de modo (0 para modo remoto)
+              menu_efectos_remoto(win);
+              break;
+            default:
+              wclear(win);
+              wrefresh(win);
+              break;
+          }
+          wrefresh(win);
+          break;
+		    case KEY_F(2): exit = 1; break;
+		    default: break;
 		}
 	 
 

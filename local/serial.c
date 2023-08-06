@@ -1,46 +1,66 @@
 #include "tpo.h"
-
+#define BAUDRATE B115200
+#define MODEMDEVICE "/dev/ttyAMA0"
 
 int open_port(const char * device, uint32_t baud_rate){
-
+  
+  int result;
 	int fd = open(device, O_RDWR | O_NOCTTY);
 	if(fd == -1){
 		perror(device);
 		return -1;
 	}
 
-	int result = tcflush(fd,TCIOFLUSH);
 	
-	if(result) perror("falla al hacer flush");
+	struct termios oldtty,newtty;
 	
-	struct termios tty;
-	
-	result = tcgetattr(fd,&tty);
-
+	result = tcgetattr(fd,&oldtty);
+  
 	if(result){
 		perror("tcgetattr falló");
 		close(fd);
 		return -1;
 	}
 	
-	//Desactiva cualquier opción que pueda interferir con la capacidad de enviar datos en modo raw
-
-	tty.c_iflag &= ~(INLCR | IGNCR | ICRNL | IXON | IXOFF);
-	tty.c_oflag &= ~(ONLCR | OCRNL );
-	tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
-
-	//configuracion de los timeouts: Las llamadas a la funcion read() retornan un valor tan pronto como haya al menos un byte disponible o hayan transcurrido 100 ms.
-	
-	tty.c_cc[VTIME] = 1;
-	tty.c_cc[VMIN]  = 0;
+  bzero(&newtty,sizeof(newtty));
 
 
-	//configuración de la velocidad del puerto. 115200 baudios para menor latencia
-	
-	cfsetospeed(&tty,B115200);
-	cfsetispeed(&tty,B115200);
+  // Establece la velocidad de BAUDRATE
+  cfsetispeed(&newtty,BAUDRATE);
+  
+  //Establezco el modo no canonico (raw)
+  newtty.c_lflag &= (ICANON | ECHO | ECHOE | ISIG);
 
-	result = tcsetattr(fd, TCSANOW, &tty);
+  //Activa el receptor y el modo local
+  newtty.c_cflag |= (CLOCAL | CREAD);
+
+  // puerto configurado para 8N1
+	newtty.c_cflag &= ~PARENB;
+  newtty.c_cflag &= ~CSTOPB;
+  newtty.c_cflag &= ~CSIZE;
+  newtty.c_cflag |=  CS8;
+
+  //desactiva el flow control por hardware
+  newtty.c_cflag &= ~(CRTSCTS);
+  //desactiva el flow control por software. Ignora errores de paridad
+  newtty.c_iflag &= ~(IXON | IXOFF | IXANY | IGNPAR);
+  //desactivo mapeos de caracteres especiales
+  newtty.c_iflag &= ~(INLCR | IGNCR | ICRNL);
+
+
+
+	//configuración de los mínimos caracteres a recibir para terminar la lectura del puerto
+	newtty.c_cc[VTIME] = 1;
+  //configuración del tiempo a esperar por el proximo byte. En este caso el timer esta desactivado
+	newtty.c_cc[VMIN]  = 6;
+
+
+  // vacio los buffers de entrada y salida
+	result = tcflush(fd,TCIOFLUSH); 
+	if(result) perror("falla al hacer flush");
+  
+  //TCSANOW especifica que todos los cambios realizados arriba deben aplicarse inmediatemente en la linea que sigue sin esperar los datos entrantes o salientes actuales.
+	result = tcsetattr(fd, TCSANOW, &newtty);
 
 	return fd;
 }
@@ -75,5 +95,4 @@ ssize_t read_port(int fd,uint8_t * buffer, size_t size){
 
 	return received;
 }
-
 

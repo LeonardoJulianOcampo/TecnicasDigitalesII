@@ -2,6 +2,47 @@
 
 #define OPTIONS 7
 
+/*  void debug(WINDOW *win){
+  
+      char buffer[7];
+      int time = 10000;
+    	int  fd = open_port("/dev/ttyAMA0",115200);			
+      int cuenta =0;
+      int read_number;
+//      pthread_t thread_id;
+//      pthread_create(&thread_id,NULL,read_s_port,NULL);
+      nodelay(stdscr,TRUE);
+      wclear(win) ;
+
+      while(!s){
+      if(read(fd,buffer,sizeof(buffer))>0)
+        mvwprintw(win,3,2,"lee dato %d",cuenta);
+      wrefresh(win);
+      buffer[6]='\0';
+      time = atoi(buffer);
+      box(win,0,0);
+      mvwprintw(win,2,2,"entra a debug ok! %d %d",cuenta,read_number);
+      mvwprintw(win,3,2,"%s",buffer);
+      wrefresh(win);
+      napms(100);
+      cuenta ++;
+      int tecla = getch();
+      if (tecla == KEY_F(2)){
+        close(fd);
+        break;
+      }
+//      pthread_mutex_lock(&t_factor_mutex);
+      time = time_factor;
+//      pthread_mutex_unlock(&t_factor_mutex);
+
+
+      }
+      
+      nodelay(stdscr,FALSE);
+      
+  }
+*/
+
 void menu_efectos(WINDOW *win){
 	int op,row,col,wcol,wrow;
 	int exit = 0;
@@ -14,13 +55,15 @@ void menu_efectos(WINDOW *win){
 				     "Sirena",
 				     "Move",
 				     "Salir"};
-	int         fd    = open_port("/dev/ttyAMA0",115200);			
-	uint8_t buffer[1] = {"0"};  	
+	int  fd = open_port("/dev/ttyAMA0",115200);			
+	char buffer[7];  	
 	int key;
+  int tecl;
 
 	getmaxyx(stdscr,row,col);
 	clear();
 	getmaxyx(win, wrow, wcol);
+  
 
 
 	while(!exit && control_flag){
@@ -112,7 +155,7 @@ void menu_efectos(WINDOW *win){
 	while(!exit && !control_flag){                         // este bucle es el que se ejecuta cuando el control remoto se encuentra habilitado
 	
 		bool cont = true;
-
+		nodelay(stdscr,TRUE);             //no espera enter cuando se entra a la funcion getch()  
 		clear();                                               // solo despliega una ventana informativa. No permite el control por teclado 
 		box(win,0,0);
 		mvwprintw(win,2,(wcol - strlen(title_remoto))/2,title_remoto);
@@ -123,29 +166,48 @@ void menu_efectos(WINDOW *win){
 		 * El siguiente bucle se implementa para que se lea constantemente el puerto serie hasta que se envie desde el programa remoto una combinación de caracteres que coincida con la de alguno de los efectos de luces. *
 		 * cuando eso suceda se disparará alguna de las funciones de efectos luminosos. Caso contrario, el programa queda esperando a no ser que se vuelva al menu anterior con la tecla F2.                                *
 		 ********************************************************************************************************************************************************************************************************************/
-		
-
+    bool q = true;		
+    int cuenta = 0;
 		while(cont){
 	    	
-			read_port(fd,buffer,sizeof(key));	//para la clave solo se emplea un caracter de información
-			key = atoi(buffer);                     //convierto el caracter a int
-			
+
+      while(q){                                  // hasta no recibir un caracter de ingreso valido no sale de este bucle
+        read(fd,buffer,sizeof(buffer));
+        buffer[6]=0;
+        key = atoi(buffer);                      //convierto el caracter a int
+        tecl = getch();
+        if( (key > 999990 && key <= 999997) || tecl == KEY_F(2))
+          q = false;
+        cuenta ++;
+        mvwprintw(win,15,2,"key acceso: %d",key);
+        wrefresh(win);
+      }
+      close(fd); 
+      mvwprintw(win,16,2,"clave acceso: %d ciclo %d",key, cuenta);
+      wrefresh(win);
+      nodelay(stdscr,FALSE);
+      op = getch();
+      if(op == KEY_F(2))
+        cont = false;
+      nodelay(stdscr,TRUE); 
+      wrefresh(win);
+
 			switch (key){
-				
-				case 1: lacarrera(win); break;
-				case 2: choque   (win); break;
-				case 3: autofan  (win); break;
-				case 4: apilada  (win); break;
-				case 5: sirena   (win); break;
-				case 6: mov      (win); break;
-				case 7: cont =   false; break;    // si se presiona F2 se corta el bucle 
-				default: break;
-
+				case 999991: lacarrera(win); break;
+				case 999992: choque   (win); break;
+				case 999993: autofan  (win); break;
+				case 999994: apilada  (win); break;
+				case 999995: sirena   (win); break;
+				case 999996: mov      (win); break;
+				case 999997: cont =   false; break;    // si se presiona F2 se corta el bucle 
+				default: break; 
 			}
+      
 		}
-
+    if (!cont){
+      exit = 1;
+      nodelay(stdscr,FALSE);
+    }
 	}
-
-
-endwin();
+close(fd);
 }

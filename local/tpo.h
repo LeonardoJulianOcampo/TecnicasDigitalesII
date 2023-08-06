@@ -32,6 +32,7 @@ int counter(int updown, int reset, int count_max);
 void menu(void);
 /*funcion que muestra menu de efectos */
 void menu_efectos(WINDOW *win);
+void menu_efectos_remoto(WINDOW * win);
 /*funcion que muestra menu de ajustes */
 void menu_ajustes(WINDOW *win);
 /*funcion que gestiona la contrasenia*/
@@ -60,8 +61,8 @@ void mov(WINDOW *win);
 
 uint32_t vel(int up_down);
 void *read_keyboard(void *arg);
-void *read_s_port(void *arg);
-void print_efecto(WINDOW *win, int op);
+void *port_thread(void *arg);
+void print_efecto(WINDOW *win, int op,bool local_mode);
 
 
 
@@ -82,7 +83,7 @@ void s_intl_cond(WINDOW * win);
 
 
 
-
+void debug(WINDOW *win);
 
 
 

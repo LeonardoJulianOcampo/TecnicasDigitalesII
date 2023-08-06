@@ -39,7 +39,7 @@ interfaz(leds);
 
 while(!s && pigpioInitialized){
   
-	print_efecto(win,2);  
+	print_efecto(win,2,control_flag);  
     	wrefresh(win);
 	itob(numero,leds);
 	interfaz(leds);

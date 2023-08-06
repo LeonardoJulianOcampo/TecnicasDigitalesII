@@ -56,7 +56,7 @@ while(!s && pigpioInitialized){
         led1 = led1 >> 1;
     }
 
-    print_efecto(win,0);
+    print_efecto(win,0,control_flag);
     wrefresh(win);
     if(s==1)
 	break;

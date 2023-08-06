@@ -8,19 +8,30 @@
 
 pthread_mutex_t t_factor_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+int readd_port(void){
+  int fd;
+  char buffer[7];
+  int value;  
+  fd = open_port("/dev/ttyAMA0",115200); 
+  tcflush(fd, TCIFLUSH);
+  read(fd,buffer,sizeof(buffer));
+  buffer[6]=0;
+  value = atoi(buffer);
+  close(fd);
+  return value;
+  
 
-void *read_s_port(void *arg){
-	int fd;	
-	uint8_t buffer[8]={"0"};
-	uint8_t tecla = 0;
+}
+
+void *port_thread(void *arg){
+	int tecla = ERR;
+  int value;
 
 	while(keep_reading){
-		
-		read_port(fd,buffer,sizeof(buffer));	
-		pthread_mutex_lock(&t_factor_mutex);
-		time_factor = (uint32_t)atoi(buffer);
-		pthread_mutex_unlock(&t_factor_mutex);
-				
+	  tecla = getch();	
+    time_factor = readd_port();
+    if(time_factor == 999999 || tecla == KEY_F(2)) s=1;
+    //if(tecla == KEY_F(2)) s=1;
 	}
 
 return NULL;

@@ -50,7 +50,7 @@ void choque(WINDOW *win){
             	gpioDelay(time_factor);
         }
 
-	print_efecto(win,1);
+	print_efecto(win,1,control_flag);
 	wrefresh(win);
     }
 

@@ -44,7 +44,7 @@ while(!s && pigpioInitialized){
 	numero = ~numero;
     	numero = numero & 255;
 
-	print_efecto(win,4);
+	print_efecto(win,4,control_flag);
 	wrefresh(win);
 
  }
