@@ -11,9 +11,8 @@ void *read_keyboard(void *arg) {
 
 		case KEY_F(2)  : 
 				pthread_mutex_lock(&key_mutex);
-				key = '4';
-				pthread_mutex_unlock(&key_mutex);
 				s = 1;
+				pthread_mutex_unlock(&key_mutex);
 				break;
 		case KEY_UP    :
 				pthread_mutex_lock(&key_mutex);

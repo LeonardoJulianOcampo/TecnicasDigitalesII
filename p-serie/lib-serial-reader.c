@@ -34,10 +34,10 @@ int open_port(const char * device, uint32_t baud_rate){
 	tty.c_oflag &= ~(ONLCR | OCRNL );
 	tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
 
-	//configuracion de los timeouts: Las llamadas a la funcion read() retornan un valor tan pronto como haya al menos un byte disponible o hayan transcurrido 100 ms.
+	//configuracion de los timeouts: Las llamadas a la funcion read() retornan un valor tan pronto como haya al menos 6 bytes disponibles, sin timeout.
 	
-	tty.c_cc[VTIME] = 1;
-	tty.c_cc[VMIN]  = 0;
+	tty.c_cc[VTIME] = 0;
+	tty.c_cc[VMIN]  = 6;                    // leo 6 caracteres, luego existo
 
 
 	//configuración de la velocidad del puerto. 9600 baudios
@@ -68,7 +68,7 @@ ssize_t read_port(int fd,uint8_t * buffer, size_t size){
 	
 	size_t received = 0;
 	while(received < size){
-		ssize_t r = read(fd, buffer + received, size - received);
+		ssize_t r = read(fd, buffer,sizeof(buffer));
 		if(r < 0){
 			perror("falla al leer el puerto");
 			return -1;
@@ -82,24 +82,26 @@ ssize_t read_port(int fd,uint8_t * buffer, size_t size){
 }
 
 
-
 int main(void){
 
 	const char * device = "/dev/ttyAMA0";
-	uint8_t buffer[50] = {0};
+	char buffer[7];
 	int fd;
-	int wp;
 	int value;
-
-	fd = open_port(device,9600);
+  
+  memset(buffer,0,sizeof(buffer));
+	fd = open_port(device,115200);
 	if (fd<0) return 1;
 
 	while(1){
-		read_port(fd,buffer,sizeof(buffer));
+		//read_port(fd,buffer,sizeof(buffer));
+    read(fd,buffer,sizeof(buffer));
+    buffer[6]='\0';
 		value = atoi(buffer);
-		printf("%d\n",value);
-		memset(buffer,0,sizeof(buffer));
-	}
+		printf("valor convertido:%d\n",value);
+    //memset(buffer,0,sizeof(buffer));
+    if(value == 9999999) break;
+	  }
 	close(fd);
 }
 

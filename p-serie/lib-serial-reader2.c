@@ -1,9 +1,12 @@
-#include <fcntl.h>
 #include <stdio.h>
-#include <unistd.h>
+#include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <termios.h>
-#include <ncurses.h>
+
+#define MAX_BUFFER_SIZE 100
 
 int open_port(const char * device, uint32_t baud_rate){
 
@@ -82,51 +85,42 @@ ssize_t read_port(int fd,uint8_t * buffer, size_t size){
 
 
 
-int main(void){
-
-	const char * device = "/dev/ttyUSB0";
-	
-	uint8_t up[] = {"a"};
-	uint8_t dw[] = {"b"};
-
-	int fd;
-	int wp;
-	int ch;
-	int exit = 0;
-
-	initscr();
-	raw();
-	keypad(stdscr,TRUE);
-	noecho();
-	nodelay(stdscr,TRUE);
-	curs_set(0);
 
 
-	fd = open_port(device,9600);
-	if (fd<0) return 1;
 
-	exit = 1;
-	
-	while(exit){
+int main() {
+    int fd = open_port("/dev/ttyAMA0", 9600);
+    if (fd == -1) {
+        printf("Error al abrir el puerto serie.\n");
+        return 1;
+    }
 
-	ch = getch();
+    uint8_t buffer[MAX_BUFFER_SIZE];
+    ssize_t bytes_read;
+    bool is_reading = true;
 
-	switch(ch){
+    while (is_reading) {
+        // Leer desde el puerto serie
+        bytes_read = read_port(fd, buffer, sizeof(buffer) - 1);
+        if (bytes_read > 0) {
+            buffer[bytes_read] = '\0'; // Agregar terminador nulo al final del buffer
 
-		case KEY_UP  : write_port(fd,up,sizeof(up)); break;
-		case KEY_DOWN: write_port(fd,dw,sizeof(dw)); break;
-		case KEY_F(2): exit = 0; endwin(); break;
-		default : break;	
-	}
+            // Procesar el mensaje recibido
+            if (buffer[0] == '1') {
+                // Mensaje de acceso
+                printf("Mensaje de acceso recibido: %c\n", buffer[0]);
+            } else if (buffer[0] == '!') {
+                // Mensaje de salida
+                printf("Mensaje de salida recibido: F2 presionado. Saliendo del bucle.\n");
+                is_reading = false;
+            } else {
+                // Mensaje de dígitos de time_factor
+                printf("Mensaje de dígitos de time_factor recibido: %s\n", buffer);
+            }
+        }
+    }
 
-	if (wp == -1)
-		printf("Error al escribir el puerto");
-
-	}
-	close(fd);
+    close(fd);
+    return 0;
 }
-
-
-
-
 
