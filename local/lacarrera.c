@@ -28,12 +28,17 @@ else
     pigpioInitialized = 0;
 
 nodelay(stdscr,TRUE);                          //para que no espere a que se presione F2
-clear();
 
 
 // Crear un nuevo hilo para leer el teclado
 pthread_t thread_id;
-pthread_create(&thread_id, NULL, read_keyboard, NULL);
+
+
+if(control_flag)
+  pthread_create(&thread_id, NULL, read_keyboard, NULL);
+else
+  pthread_create(&thread_id, NULL, port_thread, NULL);
+
 
 for (i = 0; i < 8; i++) {
 leds[i] = 0;
@@ -52,27 +57,28 @@ while(!s && pigpioInitialized){
         aux = led1 | led2;
         itob(aux, leds);
         interfaz(leds);
-        gpioDelay(time_factor);
+        if(delaynprint(time_factor,win,EFECTO_LACARRERA)){s=1;break;}
         led1 = led1 >> 1;
     }
 
-    print_efecto(win,0,control_flag);
+    print_efecto(win,0,EFECTO_LACARRERA);
     wrefresh(win);
+
     if(s==1)
-	break;
+    	break;
 
     while (led1 >= 1 && led1 <8) {
-	led2 = led2 >> 1;
+        led2 = led2 >> 1;
         aux = led1 | led2;
         itob(aux, leds);
         interfaz(leds);
-        gpioDelay(time_factor / 2);
-	led1 = led1 >> 1;
-	led2 = led2 >> 2;
+        if(delaynprint(time_factor/2,win,EFECTO_LACARRERA)){s=1;break;}
+	      led1 = led1 >> 1;
+	      led2 = led2 >> 2;
         aux = led1 | led2;
-	itob(aux,leds);
-	interfaz(leds);
-	gpioDelay(time_factor / 2);	
+      	itob(aux,leds);
+      	interfaz(leds);
+      	if(delaynprint(time_factor/2,win,EFECTO_LACARRERA)){s=1;break;}	
     }
 
  }

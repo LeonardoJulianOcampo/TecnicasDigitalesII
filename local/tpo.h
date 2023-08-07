@@ -11,6 +11,13 @@
 #include <fcntl.h>
 
 
+#define EFECTO_LACARRERA 0
+#define EFECTO_CHOQUE    1
+#define EFECTO_AUTOFAN   2
+#define EFECTO_APILADA   3
+#define EFECTO_SIRENA    4
+#define EFECTO_MOV       5
+
 // Variable global para indicar si el hilo de lectura del teclado debe seguir ejecutándose
 extern bool keep_reading;
 // Variable global para almacenar la última tecla presionada
@@ -63,7 +70,7 @@ uint32_t vel(int up_down);
 void *read_keyboard(void *arg);
 void *port_thread(void *arg);
 void print_efecto(WINDOW *win, int op,bool local_mode);
-
+bool delaynprint(uint32_t delay_time, WINDOW *win, int efecto);
 
 
 /*funciones de manipulación del puerto serie*/

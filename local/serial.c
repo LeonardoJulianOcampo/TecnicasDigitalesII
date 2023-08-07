@@ -50,7 +50,7 @@ int open_port(const char * device, uint32_t baud_rate){
 
 
 	//configuración de los mínimos caracteres a recibir para terminar la lectura del puerto
-	newtty.c_cc[VTIME] = 1;
+	newtty.c_cc[VTIME] = 2;
   //configuración del tiempo a esperar por el proximo byte. En este caso el timer esta desactivado
 	newtty.c_cc[VMIN]  = 6;
 

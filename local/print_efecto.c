@@ -46,3 +46,20 @@ void print_efecto(WINDOW *win,int op,bool local_mode){
   }
     
 }
+
+bool delaynprint(uint32_t delay_time, WINDOW *win,int efecto){
+
+  int i = 0;
+
+  while(i<=delay_time/1000){
+    if(s==1) return true;
+    print_efecto(win,efecto,control_flag);
+    mvwprintw(win,16,2,"delay_time:%06d",delay_time);
+    wrefresh(win);
+    gpioDelay(1000);
+    i++;
+  }
+  return false;
+}
+
+

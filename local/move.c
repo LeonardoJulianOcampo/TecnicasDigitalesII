@@ -25,7 +25,12 @@ nodelay(stdscr,TRUE);                          //para que no espere a que se pre
 
 // Crear un nuevo hilo para leer el teclado
 pthread_t thread_id;
-pthread_create(&thread_id, NULL, read_keyboard, NULL);
+
+if(control_flag)
+  pthread_create(&thread_id, NULL, read_keyboard, NULL);
+else
+  pthread_create(&thread_id, NULL, port_thread, NULL);
+
 
 for (i = 0; i < 8; i++) {
 leds[i] = 0;
@@ -35,17 +40,12 @@ interfaz(leds);
  
 
 while(!s && pigpioInitialized){
-
-			
 	
 	itob(numero,leds);
 	interfaz(leds);
- 	gpioDelay(time_factor);
+ 	if(delaynprint(time_factor,win,EFECTO_MOV)){s=1;break;}
 	numero = ~numero;
-    	numero = numero & 255;
-
-	print_efecto(win,4,control_flag);
-	wrefresh(win);
+  numero = numero & 255;
 
  }
 

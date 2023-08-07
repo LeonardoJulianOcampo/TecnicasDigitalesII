@@ -16,21 +16,6 @@ int s = 0;
 int n = 7;
 int tecla;
 
-bool delaynprint(uint32_t delay_time, WINDOW *win){
-
-  int i = 0;
-
-  while(i<=delay_time/1000){
-    if(s==1) return true;
-    print_efecto(win,3,control_flag);
-    mvwprintw(win,16,2,"delay_time:%06d",delay_time);
-    wrefresh(win);
-    gpioDelay(1000);
-    i++;
-  }
-  return false;
-}
-
 
 void apilada(WINDOW *win){
   int i,k;
@@ -89,7 +74,7 @@ void apilada(WINDOW *win){
             
             itob(out | avalue,leds);
             interfaz(leds);
-            if(delaynprint(time_factor,win)){s=1;break;}
+            if(delaynprint(time_factor,win,EFECTO_APILADA)){s=1;break;}
             
             avalue = avalue >> 1;
             count ++;
@@ -101,19 +86,19 @@ void apilada(WINDOW *win){
         
         itob(out,leds);
         interfaz(leds);
-        if(delaynprint(time_factor,win)){s=1;break;}
+        if(delaynprint(time_factor,win,EFECTO_APILADA)){s=1;break;}
 
         mask = avalue;
       
         itob(out & ~mask,leds);
         interfaz(leds);
-        if(delaynprint(time_factor,win)){s=1;break;}
+        if(delaynprint(time_factor,win,EFECTO_APILADA)){s=1;break;}
 
         out = out | mask;
 
         itob(out,leds);
         interfaz(leds);
-        if(delaynprint(time_factor,win)){s=1;break;}
+        if(delaynprint(time_factor,win,EFECTO_APILADA)){s=1;break;}
 
         }
   } //fin while(!s && pigPioInitialized)

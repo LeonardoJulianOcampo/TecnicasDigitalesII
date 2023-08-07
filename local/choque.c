@@ -28,35 +28,35 @@ void choque(WINDOW *win){
 
     // Crear un nuevo hilo para leer el teclado
     pthread_t thread_id;
-    pthread_create(&thread_id, NULL, read_keyboard, NULL);
 
+    if(control_flag)
+      pthread_create(&thread_id, NULL, read_keyboard, NULL);
+    else
+      pthread_create(&thread_id, NULL, port_thread, NULL);
 
 
     while(!s && pigpioInitialized){    
-        
-        
+            
         ida    = 128;
         vuelta =   1;
-	resultado = 0;
+	      resultado = 0;
 	
-
-
         for(i=0;i<=7;i++){
-		resultado = ida + vuelta;
-		itob(resultado,leds);
-		interfaz(leds);
-		ida    =    ida >> 1;
-            	vuelta = vuelta << 1;
-            	gpioDelay(time_factor);
+		      resultado = ida + vuelta;
+		      itob(resultado,leds);
+		      interfaz(leds);
+		      ida    =    ida >> 1;
+          vuelta = vuelta << 1;
+          if(delaynprint(time_factor,win,EFECTO_CHOQUE)){s=1;break;}
         }
 
-	print_efecto(win,1,control_flag);
-	wrefresh(win);
-    }
+	      print_efecto(win,EFECTO_CHOQUE,control_flag);
+	      wrefresh(win);
+        }
 
-	for(i=0;i<=7;i++){
-		leds[i] = 0;
-	}
+	      for(i=0;i<=7;i++){
+		    leds[i] = 0;
+    }
 	
 
 
