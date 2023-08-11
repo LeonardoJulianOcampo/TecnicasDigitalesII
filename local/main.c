@@ -5,6 +5,8 @@
 #include "tpo.h"
 
 
+pthread_mutex_t t_factor_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 int main(){
 int op;
 

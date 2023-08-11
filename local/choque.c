@@ -16,6 +16,8 @@ void choque(WINDOW *win){
 	int i,j;
 	int ch;
 	int pigpioInitialized=0;
+  int salir = 0;
+  int current_time_factor = 10000;
 
     gpioInitialise();
 
@@ -28,37 +30,42 @@ void choque(WINDOW *win){
 
     // Crear un nuevo hilo para leer el teclado
     pthread_t thread_id;
-    pthread_create(&thread_id, NULL, read_keyboard, NULL);
+
+    if(control_flag)
+      pthread_create(&thread_id, NULL, read_keyboard, NULL);
+    else
+      pthread_create(&thread_id, NULL, port_thread, NULL);
 
 
+    while(!salir && pigpioInitialized){    
+           
+        pthread_mutex_lock(&t_factor_mutex);
+        current_time_factor = time_factor;
+        salir = s;
+        pthread_mutex_unlock(&t_factor_mutex); 
 
-    while(!s && pigpioInitialized){    
-        
-        
+
         ida    = 128;
         vuelta =   1;
-	resultado = 0;
+	      resultado = 0;
 	
-
-
         for(i=0;i<=7;i++){
-		resultado = ida + vuelta;
-		itob(resultado,leds);
-		interfaz(leds);
-		ida    =    ida >> 1;
-            	vuelta = vuelta << 1;
-            	gpioDelay(time_factor);
+		      resultado = ida + vuelta;
+		      itob(resultado,leds);
+		      interfaz(leds);
+		      //ida    =    ida >> 1;
+          ida = lshift(ida);
+          vuelta = vuelta << 1;
+          if(delaynprint(time_factor,win,EFECTO_CHOQUE)){s=1;break;}
         }
 
-	print_efecto(win,1);
-	wrefresh(win);
+	      print_efecto(win,EFECTO_CHOQUE,control_flag);
+	      wrefresh(win);
+        }
+
+	      for(i=0;i<=7;i++){
+		    leds[i] = 0;
     }
-
-	for(i=0;i<=7;i++){
-		leds[i] = 0;
-	}
-	
-
 
     // Detener el hilo de lectura del teclado
     keep_reading = false;
@@ -71,6 +78,7 @@ void choque(WINDOW *win){
     nodelay(stdscr,FALSE);
     keep_reading = true;
     last_key = ERR;
+    salir = 0;
     s = 0;
     pthread_cancel(thread_id);
 

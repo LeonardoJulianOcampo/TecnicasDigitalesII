@@ -28,23 +28,24 @@ int contrasenia() {
         clear();
         printCentered("Ingrese la contraseña:", row, col);
         refresh();
+        
 
-        while ((ch = getch()) != '\n') {
-            if (ch == 127 || ch == KEY_BACKSPACE) { // Manejar el caso de la tecla de retroceso
-                if (pos > 0) {
-                    pos--;
-                    // Borra el asterisco previo en la posición correspondiente
-                    mvprintw(row / 2 + 3, (col - strlen(PASSWORD)) / 2 + asterisk_pos[pos], " ");
+            while ((ch = getch()) != '\n') {
+                if (ch == 127 || ch == KEY_BACKSPACE) { // Manejar el caso de la tecla de retroceso
+                    if (pos > 0) {
+                        pos--;
+                        // Borra el asterisco previo en la posición correspondiente
+                        mvprintw(row / 2 + 3, (col - strlen(PASSWORD)) / 2 + asterisk_pos[pos], " ");
+                        refresh();
+                    }
+                } else {
+                    input[pos] = ch;
+                    mvprintw(row / 2 + 3, (col - strlen(PASSWORD)) / 2 + pos, "*"); // Imprime el caracter como *
+                    asterisk_pos[pos] = pos; // Almacena la posición x donde se imprimió el asterisco
                     refresh();
+                    pos++;
                 }
-            } else {
-                input[pos] = ch;
-                mvprintw(row / 2 + 3, (col - strlen(PASSWORD)) / 2 + pos, "*"); // Imprime el caracter como *
-                asterisk_pos[pos] = pos; // Almacena la posición x donde se imprimió el asterisco
-                refresh();
-                pos++;
             }
-        }
 
         input[pos] = '\0'; // Agregar el carácter de terminación de cadena
 
@@ -53,7 +54,7 @@ int contrasenia() {
             printCentered("Contraseña correcta. Bienvenido!", row, col);
             refresh();
             getch();
-	    return 1;
+	          return 1;
             break;
         } else {
             attempts++;
@@ -62,11 +63,10 @@ int contrasenia() {
             if (attempts < MAX_ATTEMPTS) {
                 clear();
                 printCentered("Contraseña incorrecta. Intentos restantes: ", row, col);
-		refresh();
+		            refresh();
                 mvprintw(row, col + 2, "%d", MAX_ATTEMPTS - attempts);
                 refresh();
                 getch();
-		halfdelay(1);
             }
         }
     }
@@ -77,7 +77,8 @@ int contrasenia() {
         printCentered("El programa se cerrará.", row + 3, col);
         refresh();
         getch();
-	return 0;
+        endwin();
+	      return 0;
     }
 
     endwin();

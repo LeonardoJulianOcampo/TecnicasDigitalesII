@@ -68,7 +68,6 @@ int contrasenia() {
                 mvprintw(row, col + 2, "%d", MAX_ATTEMPTS - attempts);
                 refresh();
                 getch();
-		halfdelay(1);
             }
         }
     }

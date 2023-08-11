@@ -18,7 +18,8 @@ int i=0     ;
 int ch;
 int row, col;
 int pigpioInitialized = 0;
-
+int current_time_factor = 10000;
+int salir = 0;
 
 gpioInitialise(); //inicializacion de la libreria pigpio
 
@@ -28,12 +29,16 @@ else
     pigpioInitialized = 0;
 
 nodelay(stdscr,TRUE);                          //para que no espere a que se presione F2
-clear();
 
 
 // Crear un nuevo hilo para leer el teclado
 pthread_t thread_id;
-pthread_create(&thread_id, NULL, read_keyboard, NULL);
+
+if(control_flag)
+  pthread_create(&thread_id, NULL, read_keyboard, NULL);
+else
+  pthread_create(&thread_id, NULL, port_thread, NULL);
+
 
 for (i = 0; i < 8; i++) {
 leds[i] = 0;
@@ -42,37 +47,43 @@ leds[i] = 0;
 interfaz(leds);
  
 
-while(!s && pigpioInitialized){
+while(!salir && pigpioInitialized){
 	
 	led1 = 128;
 	led2 = 128;
+
+  pthread_mutex_lock(&t_factor_mutex);
+  current_time_factor = time_factor;
+  salir = s;
+  pthread_mutex_unlock(&t_factor_mutex);
 
 	
     while (led1 <= 128 && led1 >= 8 ) {
         aux = led1 | led2;
         itob(aux, leds);
         interfaz(leds);
-        gpioDelay(time_factor);
+        if(delaynprint(current_time_factor,win,EFECTO_LACARRERA)){salir=1;break;}
         led1 = led1 >> 1;
     }
 
-    print_efecto(win,0);
+    print_efecto(win,EFECTO_LACARRERA,control_flag);
     wrefresh(win);
+
     if(s==1)
-	break;
+    	break;
 
     while (led1 >= 1 && led1 <8) {
-	led2 = led2 >> 1;
+        led2 = led2 >> 1;
         aux = led1 | led2;
         itob(aux, leds);
         interfaz(leds);
-        gpioDelay(time_factor / 2);
-	led1 = led1 >> 1;
-	led2 = led2 >> 2;
+        if(delaynprint(current_time_factor/2,win,EFECTO_LACARRERA)){salir=1;break;}
+	      led1 = led1 >> 1;
+	      led2 = led2 >> 2;
         aux = led1 | led2;
-	itob(aux,leds);
-	interfaz(leds);
-	gpioDelay(time_factor / 2);	
+      	itob(aux,leds);
+      	interfaz(leds);
+      	if(delaynprint(current_time_factor/2,win,EFECTO_LACARRERA)){salir=1;break;}	
     }
 
  }
@@ -91,6 +102,7 @@ wrefresh(win);
 nodelay(stdscr,FALSE);
 keep_reading = true;
 last_key = ERR;
+salir = 0;
 s = 0;
 pthread_cancel(thread_id);
 

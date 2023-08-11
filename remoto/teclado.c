@@ -1,17 +1,42 @@
-#include <ncurses.h>
 #include "tpo-remoto.h"
+
+pthread_mutex_t key_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
 // Función para leer el teclado en un hilo separado
 void *read_keyboard(void *arg) {
     while (keep_reading) {
         int ch = getch();
-        if (ch != ERR) {
-	    if      (ch == KEY_F(2)) s = 1;
-	    else if (ch == KEY_UP)   time_factor = vel(1);
-	    else if (ch == KEY_DOWN) time_factor = vel(0);
-	    else                     time_factor = time_factor;
+	switch(ch){
+
+		case KEY_F(2)  : 
+				pthread_mutex_lock(&key_mutex);
+				s = 1;
+				pthread_mutex_unlock(&key_mutex);
+				break;
+		case KEY_UP    :
+				pthread_mutex_lock(&key_mutex);
+				key = '1';
+				time_factor = vel(0);
+				pthread_mutex_unlock(&key_mutex);
+				break;
+		case KEY_DOWN  : 
+				pthread_mutex_lock(&key_mutex);	
+				key = '2';
+				time_factor = vel(1); 
+				pthread_mutex_unlock(&key_mutex);
+				break;
+		default        :         
+				pthread_mutex_lock(&key_mutex); 
+				key = '0';
+				pthread_mutex_unlock(&key_mutex);
+				 break;
+	
 	}
+
     }
     return NULL;
 }
+
+
+

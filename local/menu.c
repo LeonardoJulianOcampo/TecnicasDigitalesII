@@ -2,10 +2,6 @@
  se devuelve ese valor como entero para ser tomado por la funcion 'efecto'*/
 
 #include "tpo.h"
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <ncurses.h>
 
 #define OPTIONS 3
 
@@ -15,7 +11,7 @@
 #define WCX     4
 #define WCY     4
 
-   
+bool control_flag = true;
 
 void menu(void) {
     int op, row, col,wcol,wrow;
@@ -37,27 +33,25 @@ void menu(void) {
     getmaxyx(stdscr,row,col);
 
     WINDOW * win_corner = subwin(stdscr, WCLINES, WCCOLS, 10, 10);
-
+    
+    control_flag = true;
 
     getmaxyx(win_corner, wrow, wcol);
 
     while (!exit) {
         clear();
-	box(win_corner,0,0);
+	      box(win_corner,0,0);
         mvwprintw(win_corner,2,(wcol-strlen(mesg))/2, mesg);
-	mvwprintw(win_corner,18,2,"ENTER: Seleccionar Opcion. UP/DOWN: cambiar opcion");
-	wrefresh(win_corner);
-
+	      mvwprintw(win_corner,18,2,"ENTER: Seleccionar Opcion. UP/DOWN: cambiar opcion");
+	      wrefresh(win_corner);
 		
         for (i = 0; i < OPTIONS; i++) {
             if (i == counter(-1,0,OPTIONS)) {
                 wattron(win_corner,A_STANDOUT); // Resaltar opción seleccionada
                 mvwprintw(win_corner,(wrow-5) / 2 + i + 1, (wcol - strlen(options[i])) / 2, "%s", options[i]);
-		wattroff(win_corner,A_STANDOUT);
-            } else {
+            		wattroff(win_corner,A_STANDOUT);
+            } else 
                 mvwprintw(win_corner,(wrow-5) / 2 + i + 1, (wcol - strlen(options[i])) / 2, "%s", options[i]);
-	    	
-	    }
         }
 
 	op=getch();
@@ -73,14 +67,17 @@ void menu(void) {
                 if (counter(-1,0,OPTIONS) == OPTIONS - 1)
                     	exit = 1;
                 else if (counter(-1,0,OPTIONS)==0){
-			menu_efectos(win_corner);
-			i = counter(-1,1,OPTIONS);
+			                if(control_flag)
+                        menu_efectos(win_corner);
+                      else 
+                        menu_efectos_remoto(win_corner);
+			                i = counter(-1,1,OPTIONS);
 		}
 		else
-			menu_ajustes(); 
-                	refresh();
-                break;
-            default:
+			menu_ajustes(win_corner); 
+    refresh();
+    break;
+              default:
                 break;
         }
     }
